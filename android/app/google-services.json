@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1095914767766",
+    "project_id": "maumasak-ta",
+    "storage_bucket": "maumasak-ta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095914767766:android:37018b837e39b62beb89b7",
+        "android_client_info": {
+          "package_name": "com.example.mau_masak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095914767766-u6j39f3es2m3kf05294pnnh7brpvphii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtd5j4wyFVeN4JTpj9Hy6jxZ7nCQVyiZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095914767766-u6j39f3es2m3kf05294pnnh7brpvphii.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095914767766-ef9cl002d3g4ussr4fuoeof24j7m2amv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mauMasak"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

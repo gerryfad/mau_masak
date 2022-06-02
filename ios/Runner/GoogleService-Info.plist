@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1095914767766-ef9cl002d3g4ussr4fuoeof24j7m2amv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1095914767766-ef9cl002d3g4ussr4fuoeof24j7m2amv</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCabJR6aEdCat2k5A0FZjY0730S-2e9fjc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1095914767766</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.mauMasak</string>
+	<key>PROJECT_ID</key>
+	<string>maumasak-ta</string>
+	<key>STORAGE_BUCKET</key>
+	<string>maumasak-ta.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1095914767766:ios:79ac85dbc674ee59eb89b7</string>
+</dict>
+</plist>
