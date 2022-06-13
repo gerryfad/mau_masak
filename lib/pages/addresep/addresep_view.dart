@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class HomeView extends StatelessWidget {
-  HomeView({Key? key}) : super(key: key);
+class AddresepView extends StatelessWidget {
+  const AddresepView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: () {}),
-      body: Center(
-        child: Text("HOME"),
+      body: const Center(
+        child: Text("Add Resep"),
       ),
     );
   }

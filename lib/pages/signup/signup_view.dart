@@ -19,13 +19,16 @@ class SignupView extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back_ios),
-        //   color: Colors.black,
-        //   onPressed: () {
-        //     Get.back();
-        //   },
-        // ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            color: Colors.black,
+            onPressed: () {
+              Get.back();
+            },
+          ),
+        ),
       ),
       body: SafeArea(
         child: SizedBox(
