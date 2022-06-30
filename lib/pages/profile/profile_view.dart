@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:mau_masak/pages/profile/profile_controller.dart';
+import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
 
 class ProfileView extends StatelessWidget {
@@ -25,7 +26,9 @@ class ProfileView extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(10.0),
               child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed(PageName.editprofile);
+                  },
                   icon: const Icon(
                     CupertinoIcons.settings,
                     color: Colors.black87,
@@ -161,6 +164,23 @@ class ProfileView extends StatelessWidget {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 16,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Container(
+                            color: Colors.grey[300],
+                          ),
+                        );
+                      }),
                 ],
               ),
             ),

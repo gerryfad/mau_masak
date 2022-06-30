@@ -22,9 +22,10 @@ void main() async {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: "Mau Masak",
-            initialRoute:
-                snapshot.data != null ? PageName.dashboard : PageName.onboard,
-            theme: ThemeData(fontFamily: 'Poppins', primaryColor: primaryColor),
+            // initialRoute:
+            //     snapshot.data != null ? PageName.dashboard : PageName.onboard,
+            initialRoute: PageName.login,
+            theme: ThemeData(fontFamily: 'Roboto', primaryColor: primaryColor),
             getPages: PageRoutes.pages,
             builder: EasyLoading.init(),
           );

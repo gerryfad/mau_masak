@@ -44,7 +44,7 @@ class AuthController extends GetxController {
           password: password,
         );
         model.User user = model.User(
-          name: username,
+          username: username,
           email: email,
           uid: cred.user!.uid,
         );

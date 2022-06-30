@@ -1,17 +1,21 @@
 class User {
-  String name;
+  String uid;
+  String username;
   String? profilePhoto;
   String email;
-  String uid;
+  List? followers;
+  List? following;
 
   User(
-      {required this.name,
+      {required this.uid,
+      required this.username,
       required this.email,
-      required this.uid,
+      this.followers,
+      this.following,
       this.profilePhoto});
 
   Map<String, dynamic> toJson() => {
-        "name": name,
+        "name": username,
         "profilePhoto": profilePhoto,
         "email": email,
         "uid": uid,

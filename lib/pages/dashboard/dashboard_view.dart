@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:mau_masak/pages/dashboard/dashboard_controller.dart';
 
 import 'package:mau_masak/pages/home/home_view.dart';
 import 'package:mau_masak/pages/profile/profile_view.dart';
+import 'package:mau_masak/pages/search/search_view.dart';
+import 'package:mau_masak/routes/page_names.dart';
 
 import 'package:mau_masak/theme/styles.dart';
 
@@ -15,39 +19,65 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DashboardController>(
-      builder: (controller) {
-        return Scaffold(
+    return GetBuilder<DashboardController>(builder: (controller) {
+      return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
             child: IndexedStack(
               index: controller.tabIndex,
-              children: const [
+              children: [
                 HomeView(),
-                HomeView(),
-                AddresepView(),
+                SearchView(),
+                Container(),
                 HomeView(),
                 ProfileView(),
               ],
             ),
           ),
-          bottomNavigationBar: ConvexAppBar(
-            initialActiveIndex: controller.tabIndex,
-            onTap: (index) => controller.changeTabIndex(index),
-            items: const [
-              TabItem(icon: CupertinoIcons.home),
-              TabItem(icon: CupertinoIcons.search),
-              TabItem(icon: CupertinoIcons.plus),
-              TabItem(icon: CupertinoIcons.bell),
-              TabItem(icon: CupertinoIcons.person),
-            ],
+          bottomNavigationBar: CupertinoTabBar(
+            height: 55,
             backgroundColor: Colors.white,
-            color: textSecondaryColor,
-            activeColor: primaryColor,
-            style: TabStyle.fixedCircle,
-          ),
-        );
-      },
-    );
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  color:
+                      (controller.tabIndex == 0) ? primaryColor : Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.search,
+                  color:
+                      (controller.tabIndex == 1) ? primaryColor : Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    Get.toNamed(PageName.addresep);
+                  },
+                ),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.favorite,
+                  color:
+                      (controller.tabIndex == 3) ? primaryColor : Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                  color:
+                      (controller.tabIndex == 4) ? primaryColor : Colors.grey,
+                ),
+              ),
+            ],
+            onTap: (index) => controller.changeTabIndex(index),
+            currentIndex: controller.tabIndex,
+          ));
+    });
   }
 }
