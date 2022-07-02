@@ -4,12 +4,7 @@ import 'package:mau_masak/model/resep.dart';
 
 class DetailController extends GetxController {
   final String postId = Get.arguments['postId'];
-
-  // @override
-  // void onReady() {
-  //   getDetailResep(postId);
-  //   super.onReady();
-  // }
+  bool likeColor = false;
 
   Future<Resep?> getDetailResep() async {
     final dataResep =
@@ -18,5 +13,28 @@ class DetailController extends GetxController {
     if (dataResep.exists) {
       return Resep.fromJson(dataResep.data()!);
     }
+    return null;
+  }
+
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        FirebaseFirestore.instance.collection('resep').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+        likeColor = false;
+      } else {
+        FirebaseFirestore.instance.collection('resep').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+        likeColor = true;
+      }
+    } catch (error) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        error.toString(),
+      );
+    }
+    update();
   }
 }

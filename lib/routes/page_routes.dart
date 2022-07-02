@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mau_masak/binding/addresep_binding.dart';
 import 'package:mau_masak/binding/dashboard_binding.dart';
 import 'package:mau_masak/pages/addresep/addresep_view.dart';
+import 'package:mau_masak/pages/comment/comment_view.dart';
 import 'package:mau_masak/pages/dashboard/dashboard_view.dart';
 import 'package:mau_masak/pages/detailresep/detail_view.dart';
 import 'package:mau_masak/pages/login/login_view.dart';
@@ -25,7 +26,6 @@ class PageRoutes {
     GetPage(
       name: PageName.signup,
       page: () => const SignupView(),
-      //binding: BMIBinding(),
     ),
     GetPage(
       name: PageName.dashboard,
@@ -40,12 +40,14 @@ class PageRoutes {
     GetPage(
       name: PageName.detail,
       page: () => const DetailView(),
-
-      //binding: DashboardBinding(),
     ),
     GetPage(
       name: PageName.editprofile,
       page: () => const EditProfileView(),
+    ),
+    GetPage(
+      name: PageName.comment,
+      page: () => const CommentView(),
     ),
   ];
 }

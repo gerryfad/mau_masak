@@ -6,4 +6,5 @@ class PageName {
   static const addresep = "/addresep";
   static const detail = "/detail";
   static const editprofile = "/editprofile";
+  static const comment = "/comment";
 }

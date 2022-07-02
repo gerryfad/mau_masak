@@ -53,20 +53,18 @@ class ProfileView extends StatelessWidget {
                 children: [
                   const Center(),
                   // profile photo
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[200],
-                    ),
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundImage: NetworkImage(controller
+                            .userData['profilePhoto'] ??
+                        "https://images.pexels.com/photos/3990301/pexels-photo-3990301.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"),
                   ),
 
                   // username
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text(
-                      '@gerryf',
+                      "@${controller.userData['name']}",
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                   ),
@@ -170,16 +168,16 @@ class ProfileView extends StatelessWidget {
                   GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 16,
+                      itemCount: controller.resepData.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3),
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            color: Colors.grey[300],
-                          ),
-                        );
+                            padding: const EdgeInsets.all(2.0),
+                            child: Image.network(
+                              controller.resepData[index]['foto_resep'],
+                              fit: BoxFit.cover,
+                            ));
                       }),
                 ],
               ),

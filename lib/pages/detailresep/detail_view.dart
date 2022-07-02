@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mau_masak/model/resep.dart';
 import 'package:mau_masak/pages/detailresep/detail_controller.dart';
+import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -33,7 +34,7 @@ class DetailView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                detailInfo(snapshot),
+                                detailInfo(snapshot, controller),
                                 Text(
                                   "Deskripsi",
                                   style: TextStyle(
@@ -215,7 +216,8 @@ class DetailView extends StatelessWidget {
     );
   }
 
-  Widget detailInfo(AsyncSnapshot<DocumentSnapshot> snapshot) {
+  Widget detailInfo(
+      AsyncSnapshot<DocumentSnapshot> snapshot, DetailController controller) {
     return Container(
       width: Get.width,
       child: Column(
@@ -288,47 +290,66 @@ class DetailView extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Container(
-                    width: 70,
-                    height: 27,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(27),
-                        color: primaryColor.withOpacity(0.7)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                          size: 17,
-                        ),
-                        Text(
-                          snapshot.data!['likes'].length.toString(),
-                          style: TextStyle(fontSize: 13, color: Colors.white),
-                        )
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      controller.likePost(snapshot.data?['postId'],
+                          snapshot.data?['uid'], snapshot.data?['likes']);
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 27,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(27),
+                          color: primaryColor.withOpacity(0.7)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.favorite,
+                            color: snapshot.data?['likes']
+                                    .contains(snapshot.data?['uid'])
+                                ? Colors.red
+                                : Colors.white,
+                            size: 17,
+                          ),
+                          Text(
+                            snapshot.data!['likes'].length.toString(),
+                            style: TextStyle(fontSize: 13, color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(width: 10),
-                  Container(
-                    width: 90,
-                    height: 27,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(27),
-                        color: primaryColor.withOpacity(0.7)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Icon(
-                          Icons.message,
-                          color: Colors.white,
-                          size: 17,
-                        ),
-                        Text(
-                          "Komentar",
-                          style: TextStyle(fontSize: 13, color: Colors.white),
-                        )
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(PageName.comment, arguments: {
+                        "postId": snapshot.data!['postId'],
+                        "uid": snapshot.data!['uid'],
+                        "name": snapshot.data!['username'],
+                        "avatar": snapshot.data!['avatar']
+                      });
+                    },
+                    child: Container(
+                      width: 90,
+                      height: 27,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(27),
+                          color: primaryColor.withOpacity(0.7)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Icon(
+                            Icons.message,
+                            color: Colors.white,
+                            size: 17,
+                          ),
+                          Text(
+                            "Komentar",
+                            style: TextStyle(fontSize: 13, color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],

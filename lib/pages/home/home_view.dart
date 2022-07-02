@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/pages/detailresep/detail_controller.dart';
 import 'package:mau_masak/pages/home/home_controller.dart';
 import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
@@ -67,6 +68,7 @@ class HomeView extends StatelessWidget {
                                   snapshot.data?.docs.length ?? 0, (index) {
                                 return ResepCard(
                                   snap: snapshot.data?.docs[index].data(),
+                                  controller: controller,
                                 );
                               }),
                             )
@@ -89,8 +91,9 @@ class HomeView extends StatelessWidget {
 }
 
 class ResepCard extends StatelessWidget {
-  const ResepCard({required this.snap});
+  const ResepCard({required this.snap, required this.controller});
   final snap;
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +241,8 @@ class ResepCard extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print('likes');
+                                  controller.likePost(snap['postId'],
+                                      snap['uid'], snap['likes']);
                                 },
                                 child: Container(
                                   width: 70,
@@ -249,10 +253,13 @@ class ResepCard extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: const [
+                                    children: [
                                       Icon(
                                         Icons.favorite,
-                                        color: Colors.white,
+                                        color:
+                                            snap['likes'].contains(snap['uid'])
+                                                ? Colors.red
+                                                : Colors.white,
                                         size: 18,
                                       ),
                                       Text(
