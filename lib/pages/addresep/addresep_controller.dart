@@ -80,29 +80,29 @@ class AddresepController extends GetxController {
   //---------------------------
   //Post Resep
 
-  void postResep(String deskripsi, String namaResep, int waktu) async {
+  Future<void> postResep(String deskripsi, String namaResep, int waktu) async {
     String uid = firebaseAuth.currentUser!.uid;
     DocumentSnapshot userInfo =
-        await firestore.collection('users').doc(uid).get();
+        await (firestore.collection('users').doc(uid).get());
     EasyLoading.show(status: 'Loading...');
     try {
       await uploadPost(deskripsi, namaResep, waktu, images ?? File(''), uid,
-          (userInfo.data()! as Map<String, dynamic>)['name'], "avatar");
+          (userInfo.data()! as dynamic)['name'], "avatar");
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   Future<void> uploadPost(String deskripsi, String namaResep, int waktu,
-      File file, String uid, String username, String avatar) async {
+      File file, String uid, String username, String profilePhoto) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
 
     try {
       String photoUrl = await FirestorageController()
           .uploadImageToStorage('fotoResep', file, true);
-      String postId = const Uuid().v1(); // creates unique id based on time
+      String postId = const Uuid().v1();
       Resep resep = Resep(
-        avatar: avatar,
+        profilePhoto: profilePhoto,
         username: username,
         likes: [],
         uid: uid,
@@ -119,7 +119,7 @@ class AddresepController extends GetxController {
       firestore.collection('resep').doc(postId).set(resep.toJson());
       EasyLoading.dismiss();
 
-      Get.snackbar('Succes', "Berhasil Membuat Resep",
+      Get.snackbar('Success', "Berhasil Membuat Resep",
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.greenAccent);
 

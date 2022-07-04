@@ -7,4 +7,5 @@ class PageName {
   static const detail = "/detail";
   static const editprofile = "/editprofile";
   static const comment = "/comment";
+  static const userprofile = "/userprofile";
 }

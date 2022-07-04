@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:mau_masak/pages/profile/profile_controller.dart';
+import 'package:mau_masak/pages/profile/myprofile_controller.dart';
 import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({Key? key}) : super(key: key);
+class MyProfileView extends StatelessWidget {
+  const MyProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ProfileController>(
+    return GetBuilder<MyProfileController>(
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -22,17 +22,6 @@ class ProfileView extends StatelessWidget {
             title: const Text(
               "Profile",
               style: TextStyle(color: Colors.black87, fontSize: 18),
-            ),
-            leading: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: IconButton(
-                  onPressed: () {
-                    Get.toNamed(PageName.editprofile);
-                  },
-                  icon: const Icon(
-                    CupertinoIcons.settings,
-                    color: Colors.black87,
-                  )),
             ),
             actions: [
               Padding(
@@ -57,15 +46,15 @@ class ProfileView extends StatelessWidget {
                     radius: 60,
                     backgroundImage: NetworkImage(controller
                             .userData['profilePhoto'] ??
-                        "https://images.pexels.com/photos/3990301/pexels-photo-3990301.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"),
+                        "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
                   ),
 
                   // username
                   Padding(
-                    padding: EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Text(
                       "@${controller.userData['name']}",
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                     ),
                   ),
                   Row(
@@ -75,21 +64,24 @@ class ProfileView extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           child: Column(
-                            children: const [
+                            children: [
                               Text(
-                                '37',
-                                style: TextStyle(
+                                controller.userData['following'].length != 0
+                                    ? controller.userData['following'].length
+                                        .toString()
+                                    : "0",
+                                style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
-                              Text(
+                              const Text(
                                 'Following',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 12),
                               ),
                             ],
                           ),
@@ -97,18 +89,19 @@ class ProfileView extends StatelessWidget {
                       ),
                       Expanded(
                         child: Column(
-                          children: const [
+                          children: [
                             Text(
-                              '8',
-                              style: TextStyle(
+                              controller.userData['followers'].length
+                                  .toString(),
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
-                            Text(
+                            const Text(
                               'Followers',
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 12),
@@ -152,25 +145,30 @@ class ProfileView extends StatelessWidget {
                         width: Get.width,
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: GFButton(
-                          onPressed: () {},
-                          text: "Follow",
+                          onPressed: () {
+                            Get.toNamed(PageName.editprofile);
+                          },
+                          text: "Edit Profil",
                           shape: GFButtonShape.pills,
-                          //fullWidthButton: true,
+                          highlightColor: Colors.white,
+                          splashColor: primaryColor,
                           color: primaryColor,
                           size: GFSize.LARGE,
+                          type: GFButtonType.outline2x,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   GridView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.resepData.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
                       itemBuilder: (context, index) {
                         return Padding(
                             padding: const EdgeInsets.all(2.0),

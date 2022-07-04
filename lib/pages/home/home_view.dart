@@ -48,39 +48,31 @@ class HomeView extends StatelessWidget {
       body: GetBuilder<HomeController>(
           init: HomeController(),
           builder: (controller) {
-            return StreamBuilder<QuerySnapshot>(
-                stream: controller.getResep(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.active) {
-                    return SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: List.generate(
-                                  snapshot.data?.docs.length ?? 0, (index) {
-                                return ResepCard(
-                                  snap: snapshot.data?.docs[index].data(),
-                                  controller: controller,
-                                );
-                              }),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                });
+            if (controller.resepDatas.isEmpty) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: List.generate(controller.resepDatas.length,
+                            (index) {
+                          return ResepCard(
+                            controller: controller,
+                            resepData: controller.resepDatas[index],
+                          );
+                        }),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
           }),
     );
   }
@@ -91,15 +83,16 @@ class HomeView extends StatelessWidget {
 }
 
 class ResepCard extends StatelessWidget {
-  const ResepCard({required this.snap, required this.controller});
-  final snap;
+  ResepCard({required this.resepData, required this.controller});
   final HomeController controller;
+  var resepData;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(PageName.detail, arguments: {"postId": snap['postId']});
+        Get.toNamed(PageName.detail,
+            arguments: {"postId": resepData['postId']});
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25),
@@ -120,13 +113,13 @@ class ResepCard extends StatelessWidget {
                     CircleAvatar(
                       radius: 17,
                       backgroundImage: NetworkImage(
-                          "https://images.pexels.com/photos/3990301/pexels-photo-3990301.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"),
+                          "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
-                      "Gerry",
+                      resepData['username'],
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -155,7 +148,7 @@ class ResepCard extends StatelessWidget {
                               offset: const Offset(0, 1))
                         ],
                         image: DecorationImage(
-                            image: NetworkImage(snap['foto_resep']),
+                            image: NetworkImage(resepData['foto_resep']),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(20)),
                   ),
@@ -194,7 +187,7 @@ class ResepCard extends StatelessWidget {
                                             color:
                                                 primaryColor.withOpacity(0.5)),
                                         child: Text(
-                                          snap['nama_resep'],
+                                          resepData['nama_resep'],
                                           style: TextStyle(
                                               fontSize: 19,
                                               color: Colors.white,
@@ -241,8 +234,8 @@ class ResepCard extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  controller.likePost(snap['postId'],
-                                      snap['uid'], snap['likes']);
+                                  controller.likePost(resepData['postId'],
+                                      resepData['uid'], resepData['likes']);
                                 },
                                 child: Container(
                                   width: 70,
@@ -256,14 +249,14 @@ class ResepCard extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.favorite,
-                                        color:
-                                            snap['likes'].contains(snap['uid'])
-                                                ? Colors.red
-                                                : Colors.white,
+                                        color: resepData['likes']
+                                                .contains(resepData['uid'])
+                                            ? Colors.red
+                                            : Colors.white,
                                         size: 18,
                                       ),
                                       Text(
-                                        "1",
+                                        resepData['likes'].length.toString(),
                                         style: TextStyle(
                                             fontSize: 14, color: Colors.white),
                                       )
@@ -271,27 +264,37 @@ class ResepCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: 70,
-                                height: 37,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(27),
-                                    color: primaryColor.withOpacity(0.5)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Icon(
-                                      Icons.message_outlined,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                    Text(
-                                      "10",
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    )
-                                  ],
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(PageName.comment, arguments: {
+                                    "postId": resepData['postId'],
+                                    "uid": resepData['uid'],
+                                    "name": resepData['username'],
+                                    "avatar": resepData['avatar']
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  height: 37,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(27),
+                                      color: primaryColor.withOpacity(0.5)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(
+                                        Icons.message_outlined,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      Text(
+                                        " Komentar",
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

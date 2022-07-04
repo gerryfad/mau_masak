@@ -47,6 +47,8 @@ class AuthController extends GetxController {
           username: username,
           email: email,
           uid: cred.user!.uid,
+          followers: [],
+          following: [],
         );
         await firestore
             .collection('users')

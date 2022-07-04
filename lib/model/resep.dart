@@ -1,19 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Resep {
   String? username;
   List? likes;
-  String? avatar;
+  String? profilePhoto;
   String? postId;
   DateTime? createdAt;
   String? namaResep;
   String? fotoResep;
   String? deskripsi;
   int? waktu;
-  List<String>? bahan;
-  List<String>? step;
+  List<dynamic>? bahan;
+  List<dynamic>? step;
   String? uid;
 
   Resep({
-    this.avatar,
+    this.profilePhoto,
     this.username,
     this.likes,
     this.uid,
@@ -27,26 +29,29 @@ class Resep {
     this.step,
   });
 
-  factory Resep.fromJson(Map<String, dynamic> json) => Resep(
-        avatar: json["avatar"],
-        username: json["username"],
-        likes: json["likes"],
-        uid: json["uid"],
-        postId: json["postId"],
-        createdAt: json["created_at"],
-        namaResep: json["nama_resep"],
-        fotoResep: json["foto_resep"],
-        deskripsi: json["deskripsi"],
-        waktu: json["waktu"],
-        bahan: json["bahan"],
-        step: json["step"],
-      );
+  factory Resep.fromJson(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return Resep(
+      profilePhoto: snapshot["profile_photo"],
+      username: snapshot["username"] ?? "",
+      likes: snapshot["likes"],
+      uid: snapshot["uid"],
+      postId: snapshot["postId"],
+      createdAt: snapshot["created_at"].toDate(),
+      namaResep: snapshot["nama_resep"],
+      fotoResep: snapshot["foto_resep"],
+      deskripsi: snapshot["deskripsi"],
+      waktu: snapshot["waktu"],
+      bahan: snapshot["bahan"],
+      step: snapshot["step"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "username": username,
         "uid": uid,
         "likes": likes,
-        "avatar": avatar,
+        "profile_photo": profilePhoto,
         "postId": postId,
         "created_at": createdAt,
         "bahan": bahan,

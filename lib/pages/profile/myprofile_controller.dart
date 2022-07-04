@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-class ProfileController extends GetxController {
+class MyProfileController extends GetxController {
   var userData = {};
   var resepData = [];
 
@@ -17,8 +17,9 @@ class ProfileController extends GetxController {
   Future<void> getUser() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     var userInfo =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+       ( await FirebaseFirestore.instance.collection('users').doc(uid).get());
     userData = userInfo.data()!;
+    update();
   }
 
   void getResepUser() async {
@@ -28,5 +29,6 @@ class ProfileController extends GetxController {
         .where('uid', isEqualTo: uid)
         .get();
     resepData = resep.docs;
+    update();
   }
 }

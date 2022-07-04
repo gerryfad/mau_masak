@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mau_masak/pages/search/search_controller.dart';
+import 'package:mau_masak/routes/page_names.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class SearchView extends StatelessWidget {
               body: StreamBuilder<QuerySnapshot>(
                   stream: controller.getUser(),
                   builder: (context, snapshot) {
-                    var user = snapshot.data!.docs;
+                    var user = snapshot.data?.docs;
                     if (controller.search == "") {
                       return const Center(
                         child: Text("Cari User"),
@@ -57,21 +58,26 @@ class SearchView extends StatelessWidget {
                       );
                     }
                     return ListView.builder(
-                      itemCount: user.length,
+                      itemCount: user?.length ?? 0,
                       itemBuilder: (context, index) {
-                        if (user[index]['name']
-                            .toString()
-                            .toLowerCase()
-                            .startsWith(controller.search.toLowerCase())) {
+                        if ((user?[index]['name']) ??
+                            ""
+                                .toString()
+                                .toLowerCase()
+                                .startsWith(controller.search.toLowerCase())) {
                           return ListTile(
-                            onTap: () {},
+                            onTap: () {
+                              Get.toNamed(PageName.userprofile, arguments: {
+                                "uid": user?[index]['uid'],
+                              });
+                            },
                             leading: CircleAvatar(
                                 backgroundColor: Colors.grey,
-                                backgroundImage: NetworkImage(user[index]
+                                backgroundImage: NetworkImage(user?[index]
                                         ['profilePhoto'] ??
                                     "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok=")),
                             title: Text(
-                              (user[index]['name']),
+                              (user?[index]['name']),
                             ),
                           );
                         }

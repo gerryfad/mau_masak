@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:mau_masak/model/resep.dart';
 import 'package:mau_masak/pages/detailresep/detail_controller.dart';
 import 'package:mau_masak/routes/page_names.dart';
@@ -19,22 +20,22 @@ class DetailView extends StatelessWidget {
       body: GetBuilder<DetailController>(
           init: DetailController(),
           builder: (controller) {
-            CollectionReference users =
-                FirebaseFirestore.instance.collection('resep');
-            return FutureBuilder(
-                future: users.doc(controller.postId).get(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            return FutureBuilder<DocumentSnapshot>(
+                future: controller.getDetailResep(),
+                builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    Resep resep =
+                        Resep.fromJson(snapshot.data as DocumentSnapshot);
                     return CustomScrollView(
                       slivers: [
-                        header(snapshot.data!['foto_resep']),
+                        header(resep.fotoResep ?? ""),
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                detailInfo(snapshot, controller),
+                                detailInfo(resep, controller),
                                 Text(
                                   "Deskripsi",
                                   style: TextStyle(
@@ -45,7 +46,7 @@ class DetailView extends StatelessWidget {
                                 ),
                                 SizedBox(height: 15),
                                 Text(
-                                  snapshot.data!['deskripsi'],
+                                  resep.deskripsi ?? "",
                                   style: TextStyle(),
                                 ),
                                 SizedBox(height: 15),
@@ -69,13 +70,13 @@ class DetailView extends StatelessWidget {
                                   child: ListView.builder(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: snapshot.data!['bahan'].length,
+                                      itemCount: resep.bahan?.length,
                                       itemBuilder: ((context, index) {
                                         return Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 10),
                                           child: Text(
-                                            snapshot.data!['bahan'][index],
+                                            resep.bahan?[index],
                                           ),
                                         );
                                       })),
@@ -103,7 +104,7 @@ class DetailView extends StatelessWidget {
                                   child: ListView.builder(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: snapshot.data!['step'].length,
+                                      itemCount: resep.step?.length,
                                       itemBuilder: ((context, index) {
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
@@ -114,8 +115,7 @@ class DetailView extends StatelessWidget {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Text(snapshot
-                                                    .data!['step'][index]),
+                                                child: Text(resep.step?[index]),
                                               ),
                                               Divider(
                                                 thickness: 2,
@@ -216,15 +216,14 @@ class DetailView extends StatelessWidget {
     );
   }
 
-  Widget detailInfo(
-      AsyncSnapshot<DocumentSnapshot> snapshot, DetailController controller) {
+  Widget detailInfo(Resep resep, DetailController controller) {
     return Container(
       width: Get.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            snapshot.data?['nama_resep'] ?? "",
+            resep.namaResep ?? "",
             style: TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 20,
@@ -235,7 +234,9 @@ class DetailView extends StatelessWidget {
           Row(
             children: [
               Text(
-                "19/11/2022  •",
+                "${DateFormat.yMMMd().format(
+                  resep.createdAt ?? DateTime.now(),
+                )}  •",
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 12,
@@ -254,7 +255,7 @@ class DetailView extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                "${snapshot.data!['waktu']} Menit",
+                "${resep.waktu} Menit",
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 12,
@@ -276,15 +277,22 @@ class DetailView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: NetworkImage(
-                              "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"),
+                          image: NetworkImage(resep.profilePhoto ??
+                              "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
                           fit: BoxFit.cover),
                     ),
                   ),
                   SizedBox(width: 5),
-                  Text(
-                    "Gerry Fadlurahman",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(PageName.userprofile, arguments: {
+                        "uid": resep.uid,
+                      });
+                    },
+                    child: Text(
+                      resep.username ?? "",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   )
                 ],
               ),
@@ -292,8 +300,8 @@ class DetailView extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      controller.likePost(snapshot.data?['postId'],
-                          snapshot.data?['uid'], snapshot.data?['likes']);
+                      controller.likePost(resep.postId ?? "", resep.uid ?? "",
+                          resep.likes ?? []);
                     },
                     child: Container(
                       width: 70,
@@ -306,14 +314,13 @@ class DetailView extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.favorite,
-                            color: snapshot.data?['likes']
-                                    .contains(snapshot.data?['uid'])
+                            color: (resep.likes ?? []).contains(resep.uid)
                                 ? Colors.red
                                 : Colors.white,
                             size: 17,
                           ),
                           Text(
-                            snapshot.data!['likes'].length.toString(),
+                            resep.likes?.length.toString() ?? "0",
                             style: TextStyle(fontSize: 13, color: Colors.white),
                           )
                         ],
@@ -324,10 +331,10 @@ class DetailView extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Get.toNamed(PageName.comment, arguments: {
-                        "postId": snapshot.data!['postId'],
-                        "uid": snapshot.data!['uid'],
-                        "name": snapshot.data!['username'],
-                        "avatar": snapshot.data!['avatar']
+                        "postId": resep.postId,
+                        "uid": resep.uid,
+                        "name": resep.username,
+                        "avatar": resep.profilePhoto
                       });
                     },
                     child: Container(

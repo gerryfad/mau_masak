@@ -19,6 +19,8 @@ class User {
         "profilePhoto": profilePhoto,
         "email": email,
         "uid": uid,
+        "followers": followers,
+        "following": following
       };
 
   // static User fromSnap(DocumentSnapshot snap) {

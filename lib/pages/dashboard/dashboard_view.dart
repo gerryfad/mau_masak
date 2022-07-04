@@ -8,7 +8,7 @@ import 'package:mau_masak/pages/addresep/addresep_view.dart';
 import 'package:mau_masak/pages/dashboard/dashboard_controller.dart';
 
 import 'package:mau_masak/pages/home/home_view.dart';
-import 'package:mau_masak/pages/profile/profile_view.dart';
+import 'package:mau_masak/pages/profile/myprofile_view.dart';
 import 'package:mau_masak/pages/search/search_view.dart';
 import 'package:mau_masak/routes/page_names.dart';
 
@@ -30,7 +30,7 @@ class DashboardView extends StatelessWidget {
                 SearchView(),
                 Container(),
                 HomeView(),
-                ProfileView(),
+                MyProfileView(),
               ],
             ),
           ),

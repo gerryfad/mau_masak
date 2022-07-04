@@ -8,6 +8,7 @@ import 'package:mau_masak/pages/detailresep/detail_view.dart';
 import 'package:mau_masak/pages/login/login_view.dart';
 import 'package:mau_masak/pages/onboard/onboard_view.dart';
 import 'package:mau_masak/pages/profile/editProfile/editprofile_view.dart';
+import 'package:mau_masak/pages/profile/userprofile_view.dart';
 import 'package:mau_masak/pages/signup/signup_view.dart';
 import 'page_names.dart';
 
@@ -48,6 +49,10 @@ class PageRoutes {
     GetPage(
       name: PageName.comment,
       page: () => const CommentView(),
+    ),
+    GetPage(
+      name: PageName.userprofile,
+      page: () => const UserProfileView(),
     ),
   ];
 }
