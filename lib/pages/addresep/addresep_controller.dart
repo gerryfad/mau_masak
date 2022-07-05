@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:mau_masak/model/resep.dart';
+import 'package:mau_masak/model/user.dart' as model;
 import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/services/fireStorage_controller.dart';
 import 'package:uuid/uuid.dart';
@@ -84,10 +83,11 @@ class AddresepController extends GetxController {
     String uid = firebaseAuth.currentUser!.uid;
     DocumentSnapshot userInfo =
         await (firestore.collection('users').doc(uid).get());
+    model.User user = model.User.fromJson(userInfo);
     EasyLoading.show(status: 'Loading...');
     try {
       await uploadPost(deskripsi, namaResep, waktu, images ?? File(''), uid,
-          (userInfo.data()! as dynamic)['name'], "avatar");
+          user.username, user.profilePhoto ?? "");
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -95,8 +95,6 @@ class AddresepController extends GetxController {
 
   Future<void> uploadPost(String deskripsi, String namaResep, int waktu,
       File file, String uid, String username, String profilePhoto) async {
-    // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
-
     try {
       String photoUrl = await FirestorageController()
           .uploadImageToStorage('fotoResep', file, true);

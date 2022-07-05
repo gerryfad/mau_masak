@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  var resepDatas = [];
+  List resepDatas = [];
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getResep() {
     return FirebaseFirestore.instance
@@ -33,7 +33,7 @@ class HomeController extends GetxController {
               .get())
           .docs);
     }
-
+    resepDatas.sort((b, a) => a["created_at"].compareTo(b["created_at"]));
     update();
   }
 
@@ -45,6 +45,7 @@ class HomeController extends GetxController {
             .where('uid', isEqualTo: uid)
             .get())
         .docs);
+    resepDatas.sort((b, a) => a["created_at"].compareTo(b["created_at"]));
     update();
   }
 
@@ -54,12 +55,14 @@ class HomeController extends GetxController {
         FirebaseFirestore.instance.collection('resep').doc(postId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
+        resepDatas = [];
         getresepfeed();
         getResepUser();
       } else {
         FirebaseFirestore.instance.collection('resep').doc(postId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
+        resepDatas = [];
         getresepfeed();
         getResepUser();
       }

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class SearchController extends GetxController {
   String search = "";
 
-  void searchs(String value) {
+  void changeSearch(String value) {
     search = value;
     update();
   }

@@ -22,7 +22,7 @@ class SearchView extends StatelessWidget {
                   height: 38,
                   child: TextFormField(
                     onChanged: ((value) {
-                      controller.searchs(value);
+                      controller.changeSearch(value);
                     }),
                     autofocus: true,
                     autocorrect: false,
@@ -58,13 +58,12 @@ class SearchView extends StatelessWidget {
                       );
                     }
                     return ListView.builder(
-                      itemCount: user?.length ?? 0,
+                      itemCount: user?.length,
                       itemBuilder: (context, index) {
-                        if ((user?[index]['name']) ??
-                            ""
-                                .toString()
-                                .toLowerCase()
-                                .startsWith(controller.search.toLowerCase())) {
+                        if ((user?[index]['name'] ?? "")
+                            .toString()
+                            .toLowerCase()
+                            .startsWith(controller.search.toLowerCase())) {
                           return ListTile(
                             onTap: () {
                               Get.toNamed(PageName.userprofile, arguments: {

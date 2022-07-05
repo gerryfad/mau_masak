@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mau_masak/pages/detailresep/detail_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:mau_masak/pages/home/home_controller.dart';
 import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
@@ -112,18 +109,38 @@ class ResepCard extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 17,
-                      backgroundImage: NetworkImage(
+                      backgroundImage: NetworkImage(resepData[
+                              "profile_photo"] ??
                           "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
                     ),
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      resepData['username'],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(PageName.userprofile, arguments: {
+                              "uid": resepData['uid'],
+                            });
+                          },
+                          child: Text(
+                            resepData['username'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          DateFormat.yMMMd()
+                              .format(resepData['created_at'].toDate()),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -226,76 +243,6 @@ class ResepCard extends StatelessWidget {
                                     ],
                                   )
                                 ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  controller.likePost(resepData['postId'],
-                                      resepData['uid'], resepData['likes']);
-                                },
-                                child: Container(
-                                  width: 70,
-                                  height: 37,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(27),
-                                      color: primaryColor.withOpacity(0.5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(
-                                        Icons.favorite,
-                                        color: resepData['likes']
-                                                .contains(resepData['uid'])
-                                            ? Colors.red
-                                            : Colors.white,
-                                        size: 18,
-                                      ),
-                                      Text(
-                                        resepData['likes'].length.toString(),
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(PageName.comment, arguments: {
-                                    "postId": resepData['postId'],
-                                    "uid": resepData['uid'],
-                                    "name": resepData['username'],
-                                    "avatar": resepData['avatar']
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  height: 37,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(27),
-                                      color: primaryColor.withOpacity(0.5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: const [
-                                      Icon(
-                                        Icons.message_outlined,
-                                        color: Colors.white,
-                                        size: 18,
-                                      ),
-                                      Text(
-                                        " Komentar",
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
                               ),
                             ],
                           ),

@@ -17,6 +17,10 @@ class UserProfileController extends GetxController {
     super.onInit();
   }
 
+  Future<DocumentSnapshot> getUserFuture() async {
+    return await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  }
+
   Future<void> getUser() async {
     var userInfo =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
