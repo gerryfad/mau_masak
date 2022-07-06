@@ -123,10 +123,9 @@ class AddresepController extends GetxController {
 
       Get.offAllNamed(PageName.dashboard);
     } catch (err) {
-      Get.snackbar(
-        'Error Creating Account',
-        err.toString(),
-      );
+      Get.snackbar('Terjadi Kesalahan', err.toString(),
+          backgroundColor: Colors.red);
+      EasyLoading.dismiss();
     }
   }
 }

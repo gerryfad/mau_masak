@@ -19,6 +19,9 @@ class UserProfileView extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            leading: const BackButton(
+              color: Colors.black,
+            ),
             centerTitle: true,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -44,14 +47,13 @@ class UserProfileView extends StatelessWidget {
                               if (snapshot.hasData) {
                                 model.User user = model.User.fromJson(
                                     snapshot.data as DocumentSnapshot);
-
                                 return Column(
                                   children: [
                                     // profile photo
                                     CircleAvatar(
                                       radius: 60,
-                                      backgroundImage: NetworkImage(controller
-                                              .userData['profilePhoto'] ??
+                                      backgroundImage: NetworkImage(user
+                                              .profilePhoto ??
                                           "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
                                     ),
                                     // username
@@ -160,10 +162,11 @@ class UserProfileView extends StatelessWidget {
                                             text: user.uid.contains(FirebaseAuth
                                                     .instance.currentUser!.uid)
                                                 ? "Edit Profil"
-                                                : user.uid.contains(FirebaseAuth
-                                                        .instance
-                                                        .currentUser!
-                                                        .uid)
+                                                : (user.followers ?? [])
+                                                        .contains(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
                                                     ? "Following"
                                                     : "Follow",
                                             shape: GFButtonShape.pills,
@@ -173,9 +176,10 @@ class UserProfileView extends StatelessWidget {
                                                         .instance
                                                         .currentUser!
                                                         .uid)
-                                                ? GFButtonType.outline2x
+                                                ? GFButtonType.outline
                                                 : GFButtonType.solid,
                                             color: primaryColor,
+                                            highlightColor: Colors.white,
                                             size: GFSize.LARGE,
                                           ),
                                         ),
@@ -184,7 +188,7 @@ class UserProfileView extends StatelessWidget {
                                   ],
                                 );
                               }
-                              return Container();
+                              return Center(child: CircularProgressIndicator());
                             }),
                         const SizedBox(
                           height: 10,

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 class UserProfileController extends GetxController {
   final String uid = Get.arguments['uid'] ?? "";
-  var userData = {};
   var resepData = [];
   bool isloading = true;
   bool isFollowing = false;
@@ -12,20 +11,12 @@ class UserProfileController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
-    getUser();
     getResepUser();
     super.onInit();
   }
 
   Future<DocumentSnapshot> getUserFuture() async {
     return await FirebaseFirestore.instance.collection('users').doc(uid).get();
-  }
-
-  Future<void> getUser() async {
-    var userInfo =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    userData = userInfo.data() ?? {};
-    update();
   }
 
   void getResepUser() async {
@@ -67,7 +58,6 @@ class UserProfileController extends GetxController {
           'following': FieldValue.arrayUnion([followId])
         });
       }
-      getUser();
       update();
     } catch (e) {
       print(e.toString());
