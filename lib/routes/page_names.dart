@@ -8,4 +8,6 @@ class PageName {
   static const editprofile = "/editprofile";
   static const comment = "/comment";
   static const userprofile = "/userprofile";
+  static const activity = "/activity";
+  static const resetpassword = "/resetpassword";
 }

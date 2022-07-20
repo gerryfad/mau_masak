@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeController extends GetxController {
   List resepDatas = [];
+  final RefreshController homeRefreshController =
+      RefreshController(initialRefresh: false);
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getResep() {
-    return FirebaseFirestore.instance
-        .collection('resep')
-        .orderBy("created_at", descending: true)
-        .snapshots();
+  void onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    getresepfeed();
+    getResepUser();
+    homeRefreshController.refreshCompleted();
   }
 
   @override

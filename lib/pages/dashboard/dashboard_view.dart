@@ -4,6 +4,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/pages/activity/activity_view.dart';
 import 'package:mau_masak/pages/addresep/addresep_view.dart';
 import 'package:mau_masak/pages/dashboard/dashboard_controller.dart';
 
@@ -29,7 +30,7 @@ class DashboardView extends StatelessWidget {
                 HomeView(),
                 SearchView(),
                 Container(),
-                HomeView(),
+                ActivityView(),
                 MyProfileView(),
               ],
             ),

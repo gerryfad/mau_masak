@@ -15,20 +15,27 @@ void main() async {
       .then((value) {
     Get.put(AuthController());
   });
+  final authC = Get.put(AuthController());
   runApp(
     StreamBuilder<User?>(
-        stream: AuthController.instance.streamAuthStatus(),
+        stream: authC.streamAuthStatus(),
         builder: (context, snapshot) {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: "Mau Masak",
-            // initialRoute:
-            //     snapshot.data != null ? PageName.dashboard : PageName.onboard,
-            initialRoute: PageName.login,
-            theme: ThemeData(fontFamily: 'Roboto', primaryColor: primaryColor),
-            getPages: PageRoutes.pages,
-            builder: EasyLoading.init(),
-          );
+          if (snapshot.connectionState == ConnectionState.active) {
+            return GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: "Mau Masak",
+              initialRoute:
+                  snapshot.data != null ? PageName.dashboard : PageName.onboard,
+              theme:
+                  ThemeData(fontFamily: 'Roboto', primaryColor: primaryColor),
+              getPages: PageRoutes.pages,
+              builder: EasyLoading.init(),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         }),
   );
 }

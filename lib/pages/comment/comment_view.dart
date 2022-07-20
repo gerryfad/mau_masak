@@ -75,7 +75,15 @@ class CommentView extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        controller.postComment(controller.komentar.text);
+                        controller.notifikasiComment(
+                          controller.userData['profilePhoto'],
+                          controller.userData['name'],
+                        );
+                        controller.postComment(
+                            controller.userData['profilePhoto'],
+                            controller.userData['name'],
+                            controller.userData['uid'],
+                            controller.komentar.text);
                         FocusScope.of(context).unfocus();
                       },
                       child: Container(

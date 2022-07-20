@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/routes/page_names.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MyProfileController extends GetxController {
@@ -13,25 +14,20 @@ class MyProfileController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
-    getUser();
     getResepUser();
     super.onInit();
   }
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
-    getUser();
+
     getResepUser();
     myProfileRefreshController.refreshCompleted();
   }
 
-  Future<void> getUser() async {
+  Future<DocumentSnapshot> getUserFuture() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    var userInfo =
-        (await FirebaseFirestore.instance.collection('users').doc(uid).get());
-    userData = {};
-    userData = userInfo.data()!;
-    update();
+    return await FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
   void getResepUser() async {
@@ -44,5 +40,10 @@ class MyProfileController extends GetxController {
     resepData = resep.docs;
     resepData.sort((b, a) => a["created_at"].compareTo(b["created_at"]));
     update();
+  }
+
+  void logout() async {
+    await FirebaseAuth.instance.signOut();
+    Get.offAllNamed(PageName.login);
   }
 }

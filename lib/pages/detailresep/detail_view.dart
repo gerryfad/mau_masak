@@ -332,9 +332,7 @@ class DetailView extends StatelessWidget {
                     onTap: () {
                       Get.toNamed(PageName.comment, arguments: {
                         "postId": resep.postId,
-                        "uid": resep.uid,
-                        "name": resep.username,
-                        "avatar": resep.profilePhoto
+                        "uid": resep.uid
                       });
                     },
                     child: Container(

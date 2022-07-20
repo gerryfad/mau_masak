@@ -97,7 +97,9 @@ class _LoginViewState extends State<LoginView> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(PageName.resetpassword);
+                          },
                           child: const Text(
                             "Lupa Password ?",
                             style: TextStyle(
