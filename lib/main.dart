@@ -20,6 +20,7 @@ void main() async {
     StreamBuilder<User?>(
         stream: authC.streamAuthStatus(),
         builder: (context, snapshot) {
+          print(snapshot);
           if (snapshot.connectionState == ConnectionState.active) {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,

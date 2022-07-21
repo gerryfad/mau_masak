@@ -21,9 +21,22 @@ class AuthController extends GetxController {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      EasyLoading.showSuccess('Great Success!',
-          duration: const Duration(milliseconds: 500));
-      Get.offAllNamed(PageName.dashboard);
+      EasyLoading.show(status: 'loading...');
+
+      if (firebaseAuth.currentUser!.emailVerified) {
+        EasyLoading.showSuccess('Great Success!',
+            duration: const Duration(milliseconds: 500));
+        Get.offAllNamed(PageName.dashboard);
+      } else {
+        EasyLoading.dismiss();
+        Get.defaultDialog(
+            title: "Terjadi Kesalahan",
+            middleText: "Silahkan Verifikasi Email Terlebih Dahulu",
+            onConfirm: () {
+              Get.back();
+            },
+            textConfirm: "Keluar");
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         EasyLoading.dismiss();
@@ -39,23 +52,31 @@ class AuthController extends GetxController {
   void registerUser(String username, String email, String password) async {
     try {
       if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
-        UserCredential cred = await firebaseAuth.createUserWithEmailAndPassword(
+        UserCredential akun = await firebaseAuth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
+        firebaseAuth.currentUser!.sendEmailVerification();
         model.User user = model.User(
           username: username,
           email: email,
-          uid: cred.user!.uid,
+          uid: akun.user!.uid,
           followers: [],
           following: [],
         );
         await firestore
             .collection('users')
-            .doc(cred.user!.uid)
+            .doc(akun.user!.uid)
             .set(user.toJson());
         EasyLoading.dismiss();
-        Get.back();
+        Get.defaultDialog(
+            title: "Verifikasi Email",
+            middleText: "MauMasak Telah Mengirimkan Verifikasi Email",
+            onConfirm: () {
+              Get.back();
+              Get.back();
+            },
+            textConfirm: "Keluar");
       }
     } catch (e) {
       Get.snackbar(

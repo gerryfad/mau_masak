@@ -48,7 +48,7 @@ class HomeView extends StatelessWidget {
           builder: (controller) {
             if (controller.resepDatas.isEmpty) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text("Silahkan Follow"),
               );
             } else {
               return SingleChildScrollView(

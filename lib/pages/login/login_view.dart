@@ -32,7 +32,6 @@ class _LoginViewState extends State<LoginView> {
               return SingleChildScrollView(
                 child: FormBuilder(
                   key: controller.formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
                       const Text(
@@ -120,7 +119,7 @@ class _LoginViewState extends State<LoginView> {
                                 controller.formKey.currentState!.value['email'];
                             var password = controller
                                 .formKey.currentState!.value['password'];
-                            EasyLoading.show(status: 'loading...');
+
                             AuthController.instance.loginUser(email, password);
                           }
                         },
