@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/routes/page_names.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeController extends GetxController {
@@ -25,6 +26,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> getresepfeed() async {
+    resepDatas = [];
     DocumentSnapshot userInfo = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -78,5 +80,10 @@ class HomeController extends GetxController {
     }
 
     update();
+  }
+
+  void deleteResep(String postId) async {
+    await FirebaseFirestore.instance.collection('resep').doc(postId).delete();
+    Get.offAllNamed(PageName.dashboard);
   }
 }

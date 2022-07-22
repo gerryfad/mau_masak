@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -31,13 +32,15 @@ class HomeView extends StatelessWidget {
                       color: primaryColor,
                       fontWeight: FontWeight.bold),
                 ),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications,
-                      color: Colors.black,
-                      size: 25,
-                    ))
+                // IconButton(
+                //     onPressed: () {
+                //       Get.toNamed(PageName.activity);
+                //     },
+                //     icon: const Icon(
+                //       Icons.notifications,
+                //       color: Colors.black,
+                //       size: 25,
+                //     ))
               ],
             ),
           ),
@@ -51,32 +54,32 @@ class HomeView extends StatelessWidget {
                 child: Text("Silahkan Follow"),
               );
             } else {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 25),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: List.generate(controller.resepDatas.length,
-                            (index) {
-                          return ResepCard(
-                            controller: controller,
-                            resepData: controller.resepDatas[index],
-                          );
-                        }),
-                      )
-                    ],
+              return SmartRefresher(
+                controller: controller.homeRefreshController,
+                onRefresh: controller.onRefresh,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: List.generate(controller.resepDatas.length,
+                              (index) {
+                            return ResepCard(
+                              controller: controller,
+                              resepData: controller.resepDatas[index],
+                            );
+                          }),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
             }
           }),
     );
-  }
-
-  Widget resepCard() {
-    return Container();
   }
 }
 
@@ -107,42 +110,73 @@ class ResepCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 5, left: 10),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 17,
-                      backgroundImage: NetworkImage(resepData[
-                              "profile_photo"] ??
-                          "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed(PageName.userprofile, arguments: {
-                              "uid": resepData['uid'],
-                            });
-                          },
-                          child: Text(
-                            resepData['username'],
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                        CircleAvatar(
+                          radius: 17,
+                          backgroundImage: NetworkImage(resepData[
+                                      "profile_photo"] ==
+                                  ""
+                              ? "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="
+                              : resepData["profile_photo"]),
                         ),
-                        Text(
-                          DateFormat.yMMMd()
-                              .format(resepData['created_at'].toDate()),
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Get.toNamed(PageName.userprofile, arguments: {
+                                  "uid": resepData['uid'],
+                                });
+                              },
+                              child: Text(
+                                resepData['username'],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              DateFormat.yMMMd()
+                                  .format(resepData['created_at'].toDate()),
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    )
+                    ),
+                    resepData["uid"] == FirebaseAuth.instance.currentUser!.uid
+                        ? IconButton(
+                            icon: const Icon(Icons.more_vert),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      child: InkWell(
+                                        onTap: () {
+                                          controller
+                                              .deleteResep(resepData["postId"]);
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 10),
+                                          child: Text("Hapus Postingan"),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            },
+                          )
+                        : Container()
                   ],
                 ),
               ),

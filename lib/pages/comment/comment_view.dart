@@ -41,33 +41,28 @@ class CommentView extends StatelessWidget {
 
                 return ListView.builder(
                   itemCount: komentar?.length ?? 0,
-                  itemBuilder: (ctx, index) => CommentCard(
-                    snap: snapshot.data!.docs[index],
+                  itemBuilder: (context, index) => CommentCard(
+                    snap: komentar?[index],
                   ),
                 );
               },
             ),
             bottomNavigationBar: SafeArea(
               child: Container(
-                color: Colors.white,
+                color: Colors.grey[100],
                 height: kToolbarHeight,
                 margin: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                padding: const EdgeInsets.only(left: 16, right: 8),
+                padding: const EdgeInsets.only(left: 8, right: 8),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      //backgroundImage: NetworkImage("),
-                      radius: 18,
-                    ),
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(left: 16, right: 8),
                         child: TextField(
                           controller: controller.komentar,
                           decoration: const InputDecoration(
-                            hintText: 'Comment as Gerry',
+                            hintText: 'Ketikkan komentar',
                             border: InputBorder.none,
                           ),
                         ),
@@ -105,8 +100,8 @@ class CommentView extends StatelessWidget {
 }
 
 class CommentCard extends StatelessWidget {
-  final snap;
-  const CommentCard({Key? key, required this.snap}) : super(key: key);
+  var snap;
+  CommentCard({Key? key, required this.snap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +111,7 @@ class CommentCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(snap.data()['profilePhoto'] ??
+            backgroundImage: NetworkImage(snap['avatar'] ??
                 "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
             radius: 18,
           ),
@@ -131,12 +126,12 @@ class CommentCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                            text: "${snap.data()['username']}",
+                            text: "${snap['username']}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black)),
                         TextSpan(
-                          text: ' ${snap.data()['text']}',
+                          text: ' ${snap['text']}',
                           style: TextStyle(color: Colors.black),
                         ),
                       ],
@@ -146,7 +141,7 @@ class CommentCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       DateFormat.yMMMd().format(
-                        snap.data()['datePublished'].toDate(),
+                        snap['datePublished'].toDate(),
                       ),
                       style: const TextStyle(
                         fontSize: 12,
@@ -158,13 +153,6 @@ class CommentCard extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Icon(
-              Icons.favorite,
-              size: 16,
-            ),
-          )
         ],
       ),
     );

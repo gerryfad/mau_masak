@@ -49,14 +49,21 @@ class EditProfileController extends GetxController {
   Future<void> updateUser() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     EasyLoading.show(status: 'Loading...');
-    String photoUrl = await FirestorageController()
-        .uploadImageToStorage('ProfilePhoto', images ?? File(""), false);
-
+    const Duration(milliseconds: 600);
     try {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({
-        'profilePhoto': photoUrl,
-        'name': username.text,
-      });
+      if (images != null) {
+        String photoUrl = await FirestorageController()
+            .uploadImageToStorage('ProfilePhoto', images ?? File(""), false);
+        FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'profilePhoto': photoUrl,
+          'name': username.value.text,
+        });
+      } else {
+        FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'name': username.value.text,
+        });
+      }
+
       EasyLoading.dismiss();
       Get.back();
     } catch (error) {

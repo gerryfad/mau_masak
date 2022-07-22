@@ -43,22 +43,28 @@ class SearchView extends StatelessWidget {
                           borderSide: BorderSide.none),
                       hintStyle:
                           TextStyle(fontSize: 14, color: Colors.grey.shade500),
-                      hintText: "Search users"),
+                      hintText: "Pencarian..."),
                 ),
               ),
               actions: [
-                FlutterSwitch(
-                  activeText: "User",
-                  inactiveText: "Resep",
-                  inactiveColor: primaryColor,
-                  value: controller.togglesearch,
-                  valueFontSize: 12.0,
-                  width: 80,
-                  borderRadius: 30.0,
-                  showOnOff: true,
-                  onToggle: (val) {
-                    controller.changeToggleSearch(val);
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FlutterSwitch(
+                    activeText: "User",
+                    inactiveText: "Resep",
+                    activeColor: primaryColor,
+                    activeTextColor: Colors.white,
+                    inactiveTextColor: Colors.white,
+                    inactiveColor: primaryColor,
+                    value: controller.togglesearch,
+                    valueFontSize: 12.0,
+                    width: 75,
+                    borderRadius: 30.0,
+                    showOnOff: true,
+                    onToggle: (val) {
+                      controller.changeToggleSearch(val);
+                    },
+                  ),
                 ),
               ],
             ),
@@ -73,8 +79,26 @@ class SearchView extends StatelessWidget {
                   );
                 }
                 if (controller.search == "") {
-                  return const Center(
-                    child: Text("Cari User"),
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: resep?.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, mainAxisSpacing: 1),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(PageName.detail,
+                              arguments: {"postId": resep?[index]['postId']});
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Image.network(
+                              resep?[index]['foto_resep'],
+                              fit: BoxFit.cover,
+                            )),
+                      );
+                    },
                   );
                 }
                 if (controller.togglesearch) {
@@ -114,14 +138,14 @@ class SearchView extends StatelessWidget {
                         .startsWith(controller.search.toLowerCase())) {
                       return ListTile(
                         onTap: () {
-                          Get.toNamed(PageName.userprofile, arguments: {
-                            "uid": user?[index]['uid'],
+                          Get.toNamed(PageName.detail, arguments: {
+                            "postId": resep?[index]['postId'],
                           });
                         },
                         leading: CircleAvatar(
                             backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(user?[index]
-                                    ['profilePhoto'] ??
+                            backgroundImage: NetworkImage(resep?[index]
+                                    ['foto_resep'] ??
                                 "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok=")),
                         title: Text(
                           (resep?[index]['nama_resep']),

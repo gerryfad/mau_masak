@@ -31,6 +31,7 @@ class CommentController extends GetxController {
         .collection('resep')
         .doc(postId)
         .collection('komentar')
+        .orderBy('datePublished', descending: false)
         .snapshots();
   }
 

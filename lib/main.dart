@@ -25,8 +25,10 @@ void main() async {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               title: "Mau Masak",
-              initialRoute:
-                  snapshot.data != null ? PageName.dashboard : PageName.onboard,
+              initialRoute: snapshot.data != null &&
+                      FirebaseAuth.instance.currentUser!.emailVerified
+                  ? PageName.dashboard
+                  : PageName.onboard,
               theme:
                   ThemeData(fontFamily: 'Roboto', primaryColor: primaryColor),
               getPages: PageRoutes.pages,
