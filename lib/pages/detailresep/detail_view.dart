@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mau_masak/model/resep.dart';
 import 'package:mau_masak/pages/detailresep/detail_controller.dart';
 import 'package:mau_masak/routes/page_names.dart';
+import 'package:mau_masak/services/firemessaging_controller.dart';
 import 'package:mau_masak/theme/styles.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -277,8 +278,9 @@ class DetailView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: NetworkImage(resep.profilePhoto ??
-                              "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
+                          image: NetworkImage(resep.profilePhoto == ""
+                              ? "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="
+                              : resep.profilePhoto ?? ""),
                           fit: BoxFit.cover),
                     ),
                   ),
@@ -300,8 +302,22 @@ class DetailView extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      controller.likePost(resep.postId ?? "", resep.uid ?? "",
-                          resep.likes ?? []);
+                      controller.likePost(resep.postId ?? "",
+                          controller.currentUserData['uid'], resep.likes ?? []);
+                      if (controller.currentUserData['uid'] !=
+                          controller.ownerUserData['uid']) {
+                        FiremessagingController.activityPost(
+                            controller.currentUserData['profilePhoto'],
+                            controller.currentUserData['name'],
+                            controller.ownerUserData['uid'],
+                            'suka',
+                            controller.postId);
+                        FiremessagingController.sendNotification(
+                          controller.currentUserData['name'],
+                          "Menyukai Postingan Anda",
+                          controller.ownerUserData['tokenNotif'],
+                        );
+                      }
                     },
                     child: Container(
                       width: 70,
@@ -314,7 +330,8 @@ class DetailView extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.favorite,
-                            color: (resep.likes ?? []).contains(resep.uid)
+                            color: (resep.likes ?? [])
+                                    .contains(controller.currentUserData['uid'])
                                 ? Colors.red
                                 : Colors.white,
                             size: 17,

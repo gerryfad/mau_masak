@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mau_masak/pages/activity/activity_controller.dart';
+import 'package:mau_masak/routes/page_names.dart';
 import 'package:mau_masak/theme/styles.dart';
 
 class ActivityView extends StatelessWidget {
@@ -35,7 +36,7 @@ class ActivityView extends StatelessWidget {
 
                 return ListView.builder(
                   itemCount: komentar?.length ?? 0,
-                  itemBuilder: (ctx, index) => ActivityCard(
+                  itemBuilder: (contex, index) => ActivityCard(
                     snap: snapshot.data!.docs[index],
                   ),
                 );
@@ -52,18 +53,25 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.black,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(snap.data()['profilePhoto'] ??
-                "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
-            radius: 18,
-          ),
-          Expanded(
-            child: Padding(
+    return InkWell(
+      onTap: (() {
+        Get.toNamed(
+          PageName.detail,
+          arguments: {
+            "postId": snap['postId'],
+            "uid": snap['uid'],
+          },
+        );
+      }),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(snap['profilePhoto']),
+              radius: 18,
+            ),
+            Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,12 +81,14 @@ class ActivityCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                            text: "${snap.data()['username']}",
+                            text: "${snap['username']}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black)),
                         TextSpan(
-                          text: ' Mengomentari postingan anda',
+                          text: snap['type'] == 'komentar'
+                              ? ' Mengomentari postingan anda'
+                              : ' Menyukai postingan anda',
                           style: TextStyle(color: Colors.black),
                         ),
                       ],
@@ -88,7 +98,7 @@ class ActivityCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       DateFormat.yMMMd().format(
-                        snap.data()['created_at'].toDate(),
+                        snap['created_at'].toDate(),
                       ),
                       style: const TextStyle(
                         fontSize: 12,
@@ -99,8 +109,8 @@ class ActivityCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

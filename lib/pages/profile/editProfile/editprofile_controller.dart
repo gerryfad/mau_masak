@@ -10,8 +10,8 @@ import 'package:mau_masak/services/firestorage_controller.dart';
 
 class EditProfileController extends GetxController {
   TextEditingController username = TextEditingController();
-  TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
@@ -35,33 +35,40 @@ class EditProfileController extends GetxController {
           images = File(image.files[i].path!);
         }
         update();
+        String photoUrl = await FirestorageController()
+            .uploadImageToStorage('ProfilePhoto', images ?? File(""), false);
+        FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'profilePhoto': photoUrl,
+        });
       }
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
+  //---------------------------
+
   Future<DocumentSnapshot> getUser() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
     return await FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
   Future<void> updateUser() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
     EasyLoading.show(status: 'Loading...');
-    const Duration(milliseconds: 600);
+    const Duration(milliseconds: 1000);
     try {
-      if (images != null) {
-        String photoUrl = await FirestorageController()
-            .uploadImageToStorage('ProfilePhoto', images ?? File(""), false);
+      if (username.value.text == "" && password.value.text == "") {
         FirebaseFirestore.instance.collection('users').doc(uid).update({
-          'profilePhoto': photoUrl,
+          'name': username.value.text,
+        });
+        await FirebaseAuth.instance.currentUser!
+            .updatePassword(password.value.text);
+      } else if (username.value.text != "") {
+        FirebaseFirestore.instance.collection('users').doc(uid).update({
           'name': username.value.text,
         });
       } else {
-        FirebaseFirestore.instance.collection('users').doc(uid).update({
-          'name': username.value.text,
-        });
+        await FirebaseAuth.instance.currentUser!
+            .updatePassword(password.value.text);
       }
 
       EasyLoading.dismiss();

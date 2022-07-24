@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,6 +19,7 @@ class AuthController extends GetxController {
 
   //Login User
   void loginUser(String email, String password) async {
+    String? token = await FirebaseMessaging.instance.getToken();
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -26,6 +28,10 @@ class AuthController extends GetxController {
       if (firebaseAuth.currentUser!.emailVerified) {
         EasyLoading.showSuccess('Great Success!',
             duration: const Duration(milliseconds: 500));
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseAuth.currentUser!.uid)
+            .set({'tokenNotif': token}, SetOptions(merge: true));
         Get.offAllNamed(PageName.dashboard);
       } else {
         EasyLoading.dismiss();
@@ -58,12 +64,13 @@ class AuthController extends GetxController {
         );
         firebaseAuth.currentUser!.sendEmailVerification();
         model.User user = model.User(
-          username: username,
-          email: email,
-          uid: akun.user!.uid,
-          followers: [],
-          following: [],
-        );
+            username: username,
+            email: email,
+            uid: akun.user!.uid,
+            followers: [],
+            following: [],
+            profilePhoto:
+                "https://firebasestorage.googleapis.com/v0/b/maumasak-ta.appspot.com/o/defaultphoto.jpeg?alt=media&token=dbc86119-76ec-4690-a0a5-e8c277d6aa06");
         await firestore
             .collection('users')
             .doc(akun.user!.uid)

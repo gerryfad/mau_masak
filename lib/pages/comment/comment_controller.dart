@@ -1,28 +1,44 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/services/local_push_notification.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class CommentController extends GetxController {
   final String postId = Get.arguments['postId'] ?? "";
   final String uid = Get.arguments['uid'] ?? "";
-  var userData = {};
+  var currentUserData = {};
+  var ownerUserData = {};
   final TextEditingController komentar = TextEditingController();
 
   @override
   void onInit() {
     // TODO: implement onInit
-    getUser();
+    getCurrentUser();
+    getOwnerUser();
+
     super.onInit();
   }
 
-  Future<void> getUser() async {
+  Future<void> getOwnerUser() async {
+    var userInfo =
+        (await FirebaseFirestore.instance.collection('users').doc(uid).get());
+    ownerUserData = {};
+    ownerUserData = userInfo.data()!;
+    update();
+  }
+
+  Future<void> getCurrentUser() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     var userInfo =
         (await FirebaseFirestore.instance.collection('users').doc(uid).get());
-    userData = {};
-    userData = userInfo.data()!;
+    currentUserData = {};
+    currentUserData = userInfo.data()!;
     update();
   }
 
@@ -35,12 +51,39 @@ class CommentController extends GetxController {
         .snapshots();
   }
 
-  Future<void> postComment(
-      String avatar, String username, String uid, String text) async {
+  void postKomentar(String avatar, String username, String uid) async {
+    Get.snackbar(
+      'Terjadi Kesalahan',
+      "Silahkan isi komentar terlebih dahulu",
+      backgroundColor: Colors.green,
+    );
+    String commentId = const Uuid().v1();
+    await FirebaseFirestore.instance
+        .collection('resep')
+        .doc(postId)
+        .collection('komentar')
+        .doc(commentId)
+        .set({
+      'avatar': avatar,
+      'username': username,
+      'uid': uid,
+      'text': komentar.value.text,
+      'commentId': commentId,
+      'datePublished': DateTime.now(),
+    });
+    komentar.clear();
+  }
+
+  Future<void> postComment(String avatar, String username, String uid) async {
+    Get.snackbar(
+      'Terjadi Kesalahan',
+      "Silahkan isi komentar terlebih dahulu",
+      backgroundColor: Colors.green,
+    );
     try {
-      if (text.isNotEmpty) {
+      if (komentar.value.text != "") {
         String commentId = const Uuid().v1();
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('resep')
             .doc(postId)
             .collection('komentar')
@@ -49,7 +92,7 @@ class CommentController extends GetxController {
           'avatar': avatar,
           'username': username,
           'uid': uid,
-          'text': text,
+          'text': komentar.value.text,
           'commentId': commentId,
           'datePublished': DateTime.now(),
         });
@@ -57,35 +100,10 @@ class CommentController extends GetxController {
       } else {
         Get.snackbar(
           'Terjadi Kesalahan',
-          "",
+          "Silahkan isi komentar terlebih dahulu",
           backgroundColor: Colors.red,
         );
       }
-    } catch (error) {
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        error.toString(),
-        backgroundColor: Colors.red,
-      );
-    }
-  }
-
-  Future<void> notifikasiComment(String avatar, String username) async {
-    try {
-      String activityId = const Uuid().v1();
-      FirebaseFirestore.instance
-          .collection('activity')
-          .doc(uid)
-          .collection('activityItems')
-          .doc(activityId)
-          .set({
-        'type': "komentar",
-        'profilePhoto': avatar,
-        'username': username,
-        'uid': uid,
-        'postId': postId,
-        'created_at': DateTime.now()
-      });
     } catch (error) {
       Get.snackbar(
         'Terjadi Kesalahan',

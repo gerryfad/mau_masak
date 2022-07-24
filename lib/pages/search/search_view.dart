@@ -88,8 +88,13 @@ class SearchView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          Get.toNamed(PageName.detail,
-                              arguments: {"postId": resep?[index]['postId']});
+                          Get.toNamed(
+                            PageName.detail,
+                            arguments: {
+                              "postId": resep?[index]['postId'],
+                              "uid": resep?[index]['uid'],
+                            },
+                          );
                         },
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
@@ -108,12 +113,14 @@ class SearchView extends StatelessWidget {
                       if ((user?[index]['name'] ?? "")
                           .toString()
                           .toLowerCase()
-                          .startsWith(controller.search.toLowerCase())) {
+                          .startsWith(controller.search)) {
                         return ListTile(
                           onTap: () {
                             Get.toNamed(PageName.userprofile, arguments: {
                               "uid": user?[index]['uid'],
                             });
+
+                            FocusScope.of(context).unfocus();
                           },
                           leading: CircleAvatar(
                               backgroundColor: Colors.grey,
@@ -140,6 +147,7 @@ class SearchView extends StatelessWidget {
                         onTap: () {
                           Get.toNamed(PageName.detail, arguments: {
                             "postId": resep?[index]['postId'],
+                            "uid": resep?[index]['uid'],
                           });
                         },
                         leading: CircleAvatar(

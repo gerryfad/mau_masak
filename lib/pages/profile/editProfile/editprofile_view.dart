@@ -107,8 +107,6 @@ class EditProfileView extends StatelessWidget {
                             ),
                             buildTextField("Username", user.username, false,
                                 controller.username),
-                            buildTextField(
-                                "E-mail", user.email, false, controller.email),
                             buildTextField("Password", "********", true,
                                 controller.password),
                             SizedBox(

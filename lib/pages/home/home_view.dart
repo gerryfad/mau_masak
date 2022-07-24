@@ -91,10 +91,15 @@ class ResepCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.toNamed(PageName.detail,
-            arguments: {"postId": resepData['postId']});
-      },
+      onTap: (() {
+        Get.toNamed(
+          PageName.detail,
+          arguments: {
+            "postId": resepData['postId'],
+            "uid": resepData['uid'],
+          },
+        );
+      }),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25),
         child: Container(

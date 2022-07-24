@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mau_masak/pages/comment/comment_controller.dart';
+import 'package:mau_masak/services/firemessaging_controller.dart';
 import 'package:mau_masak/theme/styles.dart';
 
 class CommentView extends StatelessWidget {
@@ -70,15 +71,25 @@ class CommentView extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        controller.notifikasiComment(
-                          controller.userData['profilePhoto'],
-                          controller.userData['name'],
-                        );
+                        if (controller.currentUserData['uid'] !=
+                            controller.ownerUserData['uid']) {
+                          FiremessagingController.activityPost(
+                              controller.currentUserData['profilePhoto'],
+                              controller.currentUserData['name'],
+                              controller.ownerUserData['uid'],
+                              'komentar',
+                              controller.postId);
+                          FiremessagingController.sendNotification(
+                            controller.currentUserData['name'],
+                            "Mengomentari Postingan Anda",
+                            controller.ownerUserData['tokenNotif'],
+                          );
+                        }
                         controller.postComment(
-                            controller.userData['profilePhoto'],
-                            controller.userData['name'],
-                            controller.userData['uid'],
-                            controller.komentar.text);
+                          controller.currentUserData['profilePhoto'],
+                          controller.currentUserData['name'],
+                          controller.currentUserData['uid'],
+                        );
                         FocusScope.of(context).unfocus();
                       },
                       child: Container(
@@ -111,8 +122,7 @@ class CommentCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(snap['avatar'] ??
-                "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
+            backgroundImage: NetworkImage(snap['avatar']),
             radius: 18,
           ),
           Expanded(

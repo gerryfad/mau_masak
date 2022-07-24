@@ -184,7 +184,8 @@ class MyProfileView extends StatelessWidget {
                         return InkWell(
                           onTap: () {
                             Get.toNamed(PageName.detail, arguments: {
-                              "postId": controller.resepData[index]['postId']
+                              "postId": controller.resepData[index]['postId'],
+                              "uid": controller.resepData[index]['uid']
                             });
                           },
                           child: Padding(

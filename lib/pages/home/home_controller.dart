@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:mau_masak/routes/page_names.dart';
+import 'package:mau_masak/services/local_push_notification.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeController extends GetxController {
@@ -19,7 +21,10 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotificationService.display(event);
+    });
     getresepfeed();
     getResepUser();
     super.onInit();

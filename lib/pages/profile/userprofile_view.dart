@@ -194,20 +194,30 @@ class UserProfileView extends StatelessWidget {
                           height: 10,
                         ),
                         GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controller.resepData.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3),
-                            itemBuilder: (context, index) {
-                              return Padding(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controller.resepData.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Get.toNamed(PageName.detail, arguments: {
+                                  "postId": controller.resepData[index]
+                                      ['postId'],
+                                  "uid": controller.resepData[index]['uid']
+                                });
+                              },
+                              child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: Image.network(
                                     controller.resepData[index]['foto_resep'],
                                     fit: BoxFit.cover,
-                                  ));
-                            }),
+                                  )),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
