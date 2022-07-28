@@ -60,7 +60,7 @@ class MyProfileView extends StatelessWidget {
                                   radius: 60,
                                   backgroundImage: NetworkImage(user
                                           .profilePhoto ??
-                                      "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
+                                      "https://firebasestorage.googleapis.com/v0/b/maumasak-ta.appspot.com/o/defaultphoto.jpeg?alt=media&token=dbc86119-76ec-4690-a0a5-e8c277d6aa06"),
                                 ),
 
                                 // username

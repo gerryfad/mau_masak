@@ -124,9 +124,8 @@ class SearchView extends StatelessWidget {
                           },
                           leading: CircleAvatar(
                               backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(user?[index]
-                                      ['profilePhoto'] ??
-                                  "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok=")),
+                              backgroundImage:
+                                  NetworkImage(user?[index]['profilePhoto'])),
                           title: Text(
                             (user?[index]['name']),
                           ),
@@ -152,9 +151,8 @@ class SearchView extends StatelessWidget {
                         },
                         leading: CircleAvatar(
                             backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(resep?[index]
-                                    ['foto_resep'] ??
-                                "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok=")),
+                            backgroundImage:
+                                NetworkImage(resep?[index]['foto_resep'])),
                         title: Text(
                           (resep?[index]['nama_resep']),
                         ),

@@ -51,11 +51,9 @@ class UserProfileView extends StatelessWidget {
                                   children: [
                                     // profile photo
                                     CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage: NetworkImage(user
-                                              .profilePhoto ??
-                                          "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="),
-                                    ),
+                                        radius: 60,
+                                        backgroundImage: NetworkImage(
+                                            user.profilePhoto ?? "")),
                                     // username
                                     Padding(
                                       padding: const EdgeInsets.all(20.0),

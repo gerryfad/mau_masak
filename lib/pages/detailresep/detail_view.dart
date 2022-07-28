@@ -278,9 +278,7 @@ class DetailView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: NetworkImage(resep.profilePhoto == ""
-                              ? "https://media.istockphoto.com/illustrations/blank-man-profile-head-icon-placeholder-illustration-id1298261537?k=20&m=1298261537&s=612x612&w=0&h=8plXnK6Ur3LGqG9s-Xt2ZZfKk6bI0IbzDZrNH9tr9Ok="
-                              : resep.profilePhoto ?? ""),
+                          image: NetworkImage(resep.profilePhoto ?? ""),
                           fit: BoxFit.cover),
                     ),
                   ),
