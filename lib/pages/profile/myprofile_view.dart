@@ -30,7 +30,17 @@ class MyProfileView extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 5),
                 child: IconButton(
                     onPressed: () {
-                      controller.logout();
+                      Get.defaultDialog(
+                          title: "Konfirmasi",
+                          middleText: "Apakah Anda Yakin ingin keluar ?",
+                          textConfirm: "Ya",
+                          onConfirm: () {
+                            controller.logout();
+                          },
+                          textCancel: "Tidak",
+                          onCancel: () {
+                            Get.back();
+                          });
                     },
                     icon: const Icon(
                       Icons.logout,
@@ -120,7 +130,7 @@ class MyProfileView extends StatelessWidget {
                                       children: [
                                         Text(
                                           user.followers?.length.toString() ??
-                                              "2",
+                                              "0",
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,

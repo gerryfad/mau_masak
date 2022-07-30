@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:mau_masak/services/firemessaging_controller.dart';
 
 class UserProfileController extends GetxController {
   final String uid = Get.arguments['uid'] ?? "";
@@ -32,7 +33,7 @@ class UserProfileController extends GetxController {
     try {
       DocumentSnapshot snap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      List following = (snap.data()! as dynamic)['following'];
+      List following = snap['following'];
 
       if (following.contains(followId)) {
         await FirebaseFirestore.instance

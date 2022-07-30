@@ -75,11 +75,6 @@ class CommentController extends GetxController {
   }
 
   Future<void> postComment(String avatar, String username, String uid) async {
-    Get.snackbar(
-      'Terjadi Kesalahan',
-      "Silahkan isi komentar terlebih dahulu",
-      backgroundColor: Colors.green,
-    );
     try {
       if (komentar.value.text != "") {
         String commentId = const Uuid().v1();

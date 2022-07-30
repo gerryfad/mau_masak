@@ -9,6 +9,7 @@ class ActivityController extends GetxController {
         .collection('activity')
         .doc(uid)
         .collection('activityItems')
+        .limit(15)
         .orderBy('created_at', descending: true)
         .snapshots();
   }

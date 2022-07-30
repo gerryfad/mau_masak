@@ -13,7 +13,6 @@ class HomeController extends GetxController {
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
-
     getresepfeed();
     getResepUser();
     homeRefreshController.refreshCompleted();
@@ -27,15 +26,16 @@ class HomeController extends GetxController {
     });
     getresepfeed();
     getResepUser();
+
     super.onInit();
   }
 
   Future<void> getresepfeed() async {
     resepDatas = [];
-    DocumentSnapshot userInfo = await FirebaseFirestore.instance
+    DocumentSnapshot userInfo = (await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+        .get());
 
     for (var i = 0; i < userInfo['following'].length; i++) {
       resepDatas.addAll((await FirebaseFirestore.instance
@@ -60,34 +60,7 @@ class HomeController extends GetxController {
     update();
   }
 
-  Future<void> likePost(String postId, String uid, List likes) async {
-    try {
-      if (likes.contains(uid)) {
-        FirebaseFirestore.instance.collection('resep').doc(postId).update({
-          'likes': FieldValue.arrayRemove([uid])
-        });
-        resepDatas = [];
-        getresepfeed();
-        getResepUser();
-      } else {
-        FirebaseFirestore.instance.collection('resep').doc(postId).update({
-          'likes': FieldValue.arrayUnion([uid])
-        });
-        resepDatas = [];
-        getresepfeed();
-        getResepUser();
-      }
-    } catch (err) {
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        err.toString(),
-      );
-    }
-
-    update();
-  }
-
-  void deleteResep(String postId) async {
+  Future<void> deleteResep(String postId) async {
     await FirebaseFirestore.instance.collection('resep').doc(postId).delete();
     Get.offAllNamed(PageName.dashboard);
   }

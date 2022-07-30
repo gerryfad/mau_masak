@@ -32,15 +32,6 @@ class HomeView extends StatelessWidget {
                       color: primaryColor,
                       fontWeight: FontWeight.bold),
                 ),
-                // IconButton(
-                //     onPressed: () {
-                //       Get.toNamed(PageName.activity);
-                //     },
-                //     icon: const Icon(
-                //       Icons.notifications,
-                //       color: Colors.black,
-                //       size: 25,
-                //     ))
               ],
             ),
           ),
@@ -49,35 +40,33 @@ class HomeView extends StatelessWidget {
       body: GetBuilder<HomeController>(
           init: HomeController(),
           builder: (controller) {
-            if (controller.resepDatas.isEmpty) {
-              return Center(
-                child: Text("Silahkan Follow"),
-              );
-            } else {
-              return SmartRefresher(
-                controller: controller.homeRefreshController,
-                onRefresh: controller.onRefresh,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: List.generate(controller.resepDatas.length,
-                              (index) {
-                            return ResepCard(
-                              controller: controller,
-                              resepData: controller.resepDatas[index],
-                            );
-                          }),
-                        )
-                      ],
+            return SmartRefresher(
+              controller: controller.homeRefreshController,
+              onRefresh: controller.onRefresh,
+              child: controller.resepDatas.isEmpty
+                  ? Center(
+                      child: Text("Silahkan Follow"),
+                    )
+                  : SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: List.generate(
+                                  controller.resepDatas.length, (index) {
+                                return ResepCard(
+                                  controller: controller,
+                                  resepData: controller.resepDatas[index],
+                                );
+                              }),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }
+            );
           }),
     );
   }
@@ -268,7 +257,7 @@ class ResepCard extends StatelessWidget {
                                             ),
                                             SizedBox(width: 10),
                                             Text(
-                                              "80 Menit",
+                                              "${resepData['waktu'].toString()} menit",
                                               style: TextStyle(
                                                   fontSize: 13,
                                                   color: Colors.white,

@@ -10,7 +10,6 @@ class DetailController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     getCurrentUser();
     getOwnerUser();
 

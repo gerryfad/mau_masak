@@ -12,7 +12,7 @@ class FirestorageController {
   // Upload Gambar Ke firestorage
   Future<String> uploadImageToStorage(
       String childName, File file, bool isPost) async {
-    // creating location to our firebase storage
+    // membuat directory di firebase stroage
     Reference ref =
         _storage.ref().child(childName).child(_auth.currentUser!.uid);
     if (isPost) {

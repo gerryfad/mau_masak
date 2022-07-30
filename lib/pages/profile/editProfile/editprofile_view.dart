@@ -114,7 +114,14 @@ class EditProfileView extends StatelessWidget {
                             ),
                             GFButton(
                               onPressed: () async {
-                                controller.updateUser();
+                                if (controller.username.value.text == "" &&
+                                    controller.password.value.text == "") {
+                                  Get.snackbar("Terjadi Kesalahan",
+                                      "Anda Tidak Mengedit Apapun",
+                                      backgroundColor: Colors.red);
+                                } else {
+                                  controller.updateUser();
+                                }
                               },
                               text: "Simpan",
                               shape: GFButtonShape.pills,

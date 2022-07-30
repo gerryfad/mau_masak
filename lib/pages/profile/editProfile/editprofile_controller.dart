@@ -35,11 +35,16 @@ class EditProfileController extends GetxController {
           images = File(image.files[i].path!);
         }
         update();
+        EasyLoading.show(status: 'Loading...');
         String photoUrl = await FirestorageController()
             .uploadImageToStorage('ProfilePhoto', images ?? File(""), false);
         FirebaseFirestore.instance.collection('users').doc(uid).update({
           'profilePhoto': photoUrl,
         });
+
+        Get.back();
+        Get.back();
+        EasyLoading.dismiss();
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -54,9 +59,9 @@ class EditProfileController extends GetxController {
 
   Future<void> updateUser() async {
     EasyLoading.show(status: 'Loading...');
-    const Duration(milliseconds: 1000);
+    await Future.delayed(const Duration(milliseconds: 1000));
     try {
-      if (username.value.text == "" && password.value.text == "") {
+      if (username.value.text != "" && password.value.text != "") {
         FirebaseFirestore.instance.collection('users').doc(uid).update({
           'name': username.value.text,
         });

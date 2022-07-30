@@ -20,13 +20,13 @@ class AuthController extends GetxController {
   //Login User
   void loginUser(String email, String password) async {
     String? token = await FirebaseMessaging.instance.getToken();
+    EasyLoading.show(status: 'loading...');
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      EasyLoading.show(status: 'loading...');
 
       if (firebaseAuth.currentUser!.emailVerified) {
-        EasyLoading.showSuccess('Great Success!',
+        EasyLoading.showSuccess('Berhasil!',
             duration: const Duration(milliseconds: 500));
         FirebaseFirestore.instance
             .collection('users')
@@ -86,8 +86,9 @@ class AuthController extends GetxController {
             textConfirm: "Keluar");
       }
     } catch (e) {
+      EasyLoading.dismiss();
       Get.snackbar(
-        'Error Creating Account',
+        'Terjadi Kesalahan',
         e.toString(),
       );
     }

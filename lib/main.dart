@@ -13,7 +13,6 @@ import 'package:mau_masak/theme/styles.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
 }
 
 void main() async {

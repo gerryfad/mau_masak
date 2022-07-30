@@ -1,11 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
-
-import 'package:mau_masak/model/resep.dart';
 import 'package:mau_masak/pages/addresep/addresep_controller.dart';
 import 'package:mau_masak/theme/styles.dart';
 import 'package:mau_masak/utils/widget/input_label.dart';
@@ -109,6 +106,12 @@ class _AddresepViewState extends State<AddresepView> {
                           color: Colors.white,
                           child: FormBuilderTextField(
                             name: 'judul_resep',
+                            validator: (value) {
+                              if (value == null) {
+                                return "Form Tidak Boleh Kosong";
+                              }
+                              return null;
+                            },
                             autocorrect: false,
                             enableSuggestions: false,
                             decoration: InputDecoration(
@@ -143,6 +146,12 @@ class _AddresepViewState extends State<AddresepView> {
                           child: FormBuilderTextField(
                             name: "deskripsi",
                             autocorrect: false,
+                            validator: (value) {
+                              if (value == null) {
+                                return "Form Tidak Boleh Kosong";
+                              }
+                              return null;
+                            },
                             textAlignVertical: TextAlignVertical.top,
                             enableSuggestions: false,
                             maxLines: 200,
@@ -167,6 +176,29 @@ class _AddresepViewState extends State<AddresepView> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      InputLabel(
+                          child: FormBuilderTextField(
+                            name: 'waktu',
+                            validator: (value) {
+                              if (value == null) {
+                                return "Form Tidak Boleh Kosong";
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: "Lama Waktu Pengerjaan",
+                              hintStyle: const TextStyle(fontSize: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(32),
+                              ),
+                              contentPadding: EdgeInsets.only(top: 5, left: 10),
+                            ),
+                          ),
+                          label: "Waktu Pengerjaan"),
                       const SizedBox(
                         height: 10,
                       ),
@@ -270,13 +302,22 @@ class _AddresepViewState extends State<AddresepView> {
                       const SizedBox(height: 50),
                       GFButton(
                         onPressed: () {
-                          if (controller.formKeyAddResep.currentState!
-                              .saveAndValidate()) {
-                            String judulResep = controller.formKeyAddResep
-                                .currentState?.value['judul_resep'];
-                            String deskripsi = controller.formKeyAddResep
-                                .currentState?.value['deskripsi'];
-                            controller.postResep(deskripsi, judulResep, 80);
+                          if (controller.images == null) {
+                            Get.snackbar(
+                                "Terjadi Kesalahan", "Foto Tidak Boleh Kosong",
+                                backgroundColor: Colors.red);
+                          } else {
+                            if (controller.formKeyAddResep.currentState!
+                                .saveAndValidate()) {
+                              String judulResep = controller.formKeyAddResep
+                                  .currentState?.value['judul_resep'];
+                              String deskripsi = controller.formKeyAddResep
+                                  .currentState?.value['deskripsi'];
+                              String waktu = controller
+                                  .formKeyAddResep.currentState?.value['waktu'];
+                              controller.postResep(
+                                  deskripsi, judulResep, int.parse(waktu));
+                            }
                           }
                         },
                         text: "Posting",
@@ -306,6 +347,12 @@ class _AddresepViewState extends State<AddresepView> {
               name: controller.inputBahan.toString(),
               onSaved: (value) {
                 controller.bahan.add(value ?? "");
+              },
+              validator: (value) {
+                if (value == null) {
+                  return "Form Tidak Boleh Kosong";
+                }
+                return null;
               },
               autocorrect: false,
               enableSuggestions: false,
@@ -354,6 +401,12 @@ class _AddresepViewState extends State<AddresepView> {
               name: 'langkah ${controller.inputLangkah.toString()}',
               onSaved: (value) {
                 controller.langkah.add(value ?? "");
+              },
+              validator: (value) {
+                if (value == null) {
+                  return "Form Tidak Boleh Kosong";
+                }
+                return null;
               },
               autocorrect: false,
               textAlignVertical: TextAlignVertical.top,

@@ -75,7 +75,9 @@ class SearchView extends StatelessWidget {
                 var resep = snapshot.item2.data?.docs;
                 if (snapshot.item1.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
                   );
                 }
                 if (controller.search == "") {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:mau_masak/routes/page_names.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -43,7 +44,9 @@ class MyProfileController extends GetxController {
   }
 
   void logout() async {
+    EasyLoading.show(status: 'loading...');
     await FirebaseAuth.instance.signOut();
     Get.offAllNamed(PageName.login);
+    EasyLoading.dismiss();
   }
 }
