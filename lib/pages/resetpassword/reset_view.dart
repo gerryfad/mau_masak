@@ -40,7 +40,7 @@ class ResetPasswordView extends StatelessWidget {
                     child: SizedBox(
                       width: Get.width * 0.4,
                       child: Image.asset(
-                        "assets/images/forgotpassword.png",
+                        "assets/images/lupapassword.png",
                         fit: BoxFit.contain,
                       ),
                     ),

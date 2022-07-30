@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -46,10 +47,12 @@ class AuthController extends GetxController {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         EasyLoading.dismiss();
-        Get.snackbar('Error', 'Email Belum Terdaftar');
+        Get.snackbar('Terjadi Kesalahan', 'Email Belum Terdaftar',
+            backgroundColor: Colors.red);
       } else if (e.code == 'wrong-password') {
         EasyLoading.dismiss();
-        Get.snackbar('Error', 'Password Salah !');
+        Get.snackbar('Terjadi Kesalahan', 'Password Salah !',
+            backgroundColor: Colors.red);
       }
     }
   }

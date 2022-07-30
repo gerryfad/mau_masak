@@ -310,6 +310,11 @@ class DetailView extends StatelessWidget {
                             controller.ownerUserData['uid'],
                             'suka',
                             controller.postId);
+                        FiremessagingController.sendNotification(
+                          controller.currentUserData['name'],
+                          "Menyukai Postingan Anda",
+                          controller.ownerUserData['tokenNotif'],
+                        );
                       }
                     },
                     child: Container(

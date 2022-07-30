@@ -34,6 +34,17 @@ class _LoginViewState extends State<LoginView> {
                   key: controller.formKey,
                   child: Column(
                     children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        child: Image.asset(
+                          "assets/images/logo.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       const Text(
                         "Selamat Datang",
                         style: TextStyle(
@@ -61,6 +72,8 @@ class _LoginViewState extends State<LoginView> {
                           if (value != null &&
                               !EmailValidator.validate(value)) {
                             return 'Masukkan Email Yang Valid';
+                          } else if (value == null) {
+                            return "Form Tidak Boleh Kosong";
                           } else {
                             return null;
                           }
@@ -80,6 +93,8 @@ class _LoginViewState extends State<LoginView> {
                         validator: (value) {
                           if (value != null && value.length < 6) {
                             return 'Masukkan Lebih Dari 6 Karakter';
+                          } else if (value == null) {
+                            return "Form Tidak Boleh Kosong";
                           } else {
                             return null;
                           }
@@ -133,7 +148,7 @@ class _LoginViewState extends State<LoginView> {
                         height: 20,
                       ),
                       const Text(
-                        "Atau Login Dengan",
+                        "Tidak Memiliki Akun ?",
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: 'Poppins',
@@ -143,50 +158,18 @@ class _LoginViewState extends State<LoginView> {
                         height: 20,
                       ),
                       GFButton(
-                        onPressed: () {
-                          AuthController.instance.signInWithGoogle();
+                        onPressed: () async {
+                          Get.toNamed(PageName.signup);
                         },
-                        text: "Sign In With Google",
-                        textColor: const Color.fromARGB(255, 128, 127, 127),
-                        icon: Image.network(
-                            'http://pngimg.com/uploads/google/google_PNG19635.png',
-                            fit: BoxFit.cover),
-                        type: GFButtonType.solid,
-                        blockButton: true,
+                        text: "Daftar",
                         shape: GFButtonShape.pills,
+                        fullWidthButton: true,
+                        color: primaryColor,
                         size: GFSize.LARGE,
-                        color: const Color.fromARGB(255, 255, 254, 254),
-                        buttonBoxShadow: true,
-                        elevation: 2,
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Tidak Memiliki Akun ?",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Get.toNamed(PageName.signup);
-                            },
-                            child: const Text(
-                              "Daftar",
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),
