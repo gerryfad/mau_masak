@@ -32,6 +32,7 @@ class CommentView extends StatelessWidget {
               stream: controller.getComment(),
               builder: (context, snapshot) {
                 var komentar = snapshot.data?.docs;
+
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(
@@ -151,7 +152,7 @@ class CommentCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       DateFormat.yMMMd().format(
-                        snap['datePublished'].toDate(),
+                        snap['created_at'].toDate(),
                       ),
                       style: const TextStyle(
                         fontSize: 12,
