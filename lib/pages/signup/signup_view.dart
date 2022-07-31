@@ -88,6 +88,8 @@ class SignupView extends StatelessWidget {
                             if (value != null &&
                                 !EmailValidator.validate(value)) {
                               return 'Masukkan Email Yang Valid';
+                            } else if (value == null) {
+                              return "form Tidak Boleh kosong";
                             } else {
                               return null;
                             }
@@ -107,6 +109,8 @@ class SignupView extends StatelessWidget {
                           validator: (value) {
                             if (value != null && value.length < 6) {
                               return 'Masukkan Lebih Dari 6 Karakter';
+                            } else if (value == null) {
+                              return "form Tidak Boleh kosong";
                             } else {
                               return null;
                             }
@@ -125,17 +129,19 @@ class SignupView extends StatelessWidget {
                         ),
                         GFButton(
                           onPressed: () {
-                            controller.formKey.currentState!.saveAndValidate();
-                            var name = controller
-                                .formKey.currentState!.value['username'];
-                            var email =
-                                controller.formKey.currentState!.value['email'];
-                            var password = controller
-                                .formKey.currentState!.value['password'];
+                            if (controller.formKey.currentState!
+                                .saveAndValidate()) {
+                              var name = controller
+                                  .formKey.currentState!.value['username'];
+                              var email = controller
+                                  .formKey.currentState!.value['email'];
+                              var password = controller
+                                  .formKey.currentState!.value['password'];
 
-                            EasyLoading.show(status: 'Loading...');
-                            AuthController.instance
-                                .registerUser(name, email, password);
+                              EasyLoading.show(status: 'Loading...');
+                              AuthController.instance
+                                  .registerUser(name, email, password);
+                            }
                           },
                           text: "Daftar",
                           shape: GFButtonShape.pills,
