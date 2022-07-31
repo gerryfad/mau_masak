@@ -19,12 +19,10 @@ class PageRoutes {
     GetPage(
       name: PageName.onboard,
       page: () => const OnboardView(),
-      //binding: BMIBinding(),
     ),
     GetPage(
       name: PageName.login,
       page: () => const LoginView(),
-      //binding: BMIBinding(),
     ),
     GetPage(
       name: PageName.signup,

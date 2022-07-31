@@ -22,12 +22,11 @@ void main() async {
   LocalNotificationService.initialize();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  final authC = Get.put(AuthController());
+  final authController = Get.put(AuthController(), permanent: true);
   runApp(
     StreamBuilder<User?>(
-        stream: authC.streamAuthStatus(),
+        stream: authController.streamAuthStatus(),
         builder: (context, snapshot) {
-          print(snapshot);
           if (snapshot.connectionState == ConnectionState.active) {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
@@ -42,7 +41,7 @@ void main() async {
               builder: EasyLoading.init(),
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }

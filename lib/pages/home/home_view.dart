@@ -45,7 +45,21 @@ class HomeView extends StatelessWidget {
               onRefresh: controller.onRefresh,
               child: controller.resepDatas.isEmpty
                   ? Center(
-                      child: Text("Silahkan Follow"),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.person_add_sharp,
+                            color: Colors.grey,
+                            size: 100,
+                          ),
+                          Text(
+                            "Anda Belum Mengikuti\nPengguna Manapun",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          )
+                        ],
+                      ),
                     )
                   : SingleChildScrollView(
                       child: Padding(

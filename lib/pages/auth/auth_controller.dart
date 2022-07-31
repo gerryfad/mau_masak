@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mau_masak/model/user.dart' as model;
 import 'package:mau_masak/routes/page_names.dart';
 
@@ -94,28 +93,6 @@ class AuthController extends GetxController {
         'Terjadi Kesalahan',
         e.toString(),
       );
-    }
-  }
-
-  // GOOGLE SIGN IN
-  Future<void> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
-        // Create a new credential
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        UserCredential userCredential =
-            await firebaseAuth.signInWithCredential(credential);
-      }
-    } on FirebaseAuthException catch (e) {
-      Get.snackbar('Error', e.message!); // Displaying the error message
     }
   }
 }

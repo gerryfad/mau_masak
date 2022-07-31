@@ -158,7 +158,7 @@ class MyProfileView extends StatelessWidget {
 
                     const SizedBox(height: 15),
 
-                    // tombol follow
+                    // tombol edit profil
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
