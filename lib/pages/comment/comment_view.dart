@@ -123,7 +123,7 @@ class CommentCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(snap['avatar']),
+            backgroundImage: NetworkImage(snap['profile_photo']),
             radius: 18,
           ),
           Expanded(
