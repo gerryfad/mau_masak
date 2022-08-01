@@ -25,7 +25,7 @@ class ActivityView extends StatelessWidget {
             return StreamBuilder<QuerySnapshot>(
               stream: controller.getActivity(),
               builder: (context, snapshot) {
-                var komentar = snapshot.data?.docs;
+                var activity = snapshot.data?.docs;
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(
@@ -35,7 +35,7 @@ class ActivityView extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  itemCount: komentar?.length ?? 0,
+                  itemCount: activity?.length ?? 0,
                   itemBuilder: (contex, index) => ActivityCard(
                     snap: snapshot.data!.docs[index],
                   ),
