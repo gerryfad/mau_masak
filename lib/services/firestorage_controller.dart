@@ -20,7 +20,7 @@ class FirestorageController {
       ref = ref.child(id);
     }
 
-    // putting in uint8list format
+    // upload
     UploadTask uploadTask = ref.putFile(file);
 
     TaskSnapshot snapshot = await uploadTask;

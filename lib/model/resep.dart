@@ -13,21 +13,26 @@ class Resep {
   List<dynamic>? bahan;
   List<dynamic>? step;
   String? uid;
+  List? dislikes;
+  int? views;
+  String? kategori;
 
-  Resep({
-    this.profilePhoto,
-    this.username,
-    this.likes,
-    this.uid,
-    this.postId,
-    this.createdAt,
-    this.namaResep,
-    this.fotoResep,
-    this.deskripsi,
-    this.waktu,
-    this.bahan,
-    this.step,
-  });
+  Resep(
+      {this.profilePhoto,
+      this.username,
+      this.likes,
+      this.uid,
+      this.postId,
+      this.createdAt,
+      this.namaResep,
+      this.fotoResep,
+      this.deskripsi,
+      this.waktu,
+      this.bahan,
+      this.step,
+      this.dislikes,
+      this.views,
+      this.kategori});
 
   factory Resep.fromJson(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -44,6 +49,9 @@ class Resep {
       waktu: snapshot["waktu"],
       bahan: snapshot["bahan"],
       step: snapshot["step"],
+      dislikes: snapshot["dislikes"],
+      views: snapshot["views"],
+      kategori: snapshot["kategori"],
     );
   }
 
@@ -60,5 +68,8 @@ class Resep {
         "deskripsi": deskripsi,
         "waktu": waktu,
         "step": step,
+        "dislikes": dislikes,
+        "views": views,
+        "kategori": kategori,
       };
 }

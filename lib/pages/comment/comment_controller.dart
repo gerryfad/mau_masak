@@ -49,6 +49,10 @@ class CommentController extends GetxController {
 
   Future<void> postComment(
       String profilePhoto, String username, String uid) async {
+    var resepInfo = (await FirebaseFirestore.instance
+        .collection('resep')
+        .doc(postId)
+        .get());
     try {
       if (komentar.value.text != "") {
         String commentId = const Uuid().v1();
@@ -66,6 +70,10 @@ class CommentController extends GetxController {
           'created_at': DateTime.now(),
         });
         komentar.clear();
+        await FirebaseFirestore.instance
+            .collection('resep')
+            .doc(postId)
+            .update({'jumlahkomentar': (resepInfo['jumlahkomentar'] + 1)});
       } else {
         Get.snackbar(
           'Terjadi Kesalahan',

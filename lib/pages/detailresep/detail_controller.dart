@@ -61,4 +61,24 @@ class DetailController extends GetxController {
     }
     update();
   }
+
+  Future<void> dislikePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        FirebaseFirestore.instance.collection('resep').doc(postId).update({
+          'dislikes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        FirebaseFirestore.instance.collection('resep').doc(postId).update({
+          'dislikes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (error) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        error.toString(),
+      );
+    }
+    update();
+  }
 }

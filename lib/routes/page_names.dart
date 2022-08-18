@@ -10,4 +10,14 @@ class PageName {
   static const userprofile = "/userprofile";
   static const activity = "/activity";
   static const resetpassword = "/resetpassword";
+  static const admin = "/admin";
+  static const laporankomentar = "/laporankomentar";
+  static const laporanpostingan = "/laporanpostingan";
+  static const laporpengguna = "/laporpengguna";
+  static const detaillaporankomentar = "/detaillaporankomentar";
+  static const detaillaporanpostingan = "/detaillaporanpostingan";
+  static const detailresepadmin = "/detailresepadmin";
+  static const listusers = "/listusers";
+  static const listreseps = "/listreseps";
+  static const editresep = "/editresep";
 }

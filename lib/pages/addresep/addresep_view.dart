@@ -180,6 +180,37 @@ class _AddresepViewState extends State<AddresepView> {
                         height: 15,
                       ),
                       InputLabel(
+                          child: FormBuilderDropdown(
+                              name: 'kategori',
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.only(
+                                  top: 5,
+                                  left: 10,
+                                ),
+                                hintText: "Pilih Kategori",
+                                hintStyle: const TextStyle(fontSize: 14),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32),
+                                  borderSide:
+                                      const BorderSide(color: primaryColor),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32),
+                                  borderSide:
+                                      const BorderSide(color: primaryColor),
+                                ),
+                              ),
+                              items: controller.kategori
+                                  .map((kategori) => DropdownMenuItem(
+                                        value: kategori,
+                                        child: Text("$kategori"),
+                                      ))
+                                  .toList()),
+                          label: "Kategori"),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      InputLabel(
                           child: FormBuilderTextField(
                             name: 'waktu',
                             validator: (value) {
@@ -315,8 +346,11 @@ class _AddresepViewState extends State<AddresepView> {
                                   .currentState?.value['deskripsi'];
                               String waktu = controller
                                   .formKeyAddResep.currentState?.value['waktu'];
-                              controller.postResep(
-                                  deskripsi, judulResep, int.parse(waktu));
+                              String kategori = controller.formKeyAddResep
+                                  .currentState?.value['kategori'];
+                              print(kategori);
+                              controller.postResep(deskripsi, judulResep,
+                                  int.parse(waktu), kategori);
                             }
                           }
                         },

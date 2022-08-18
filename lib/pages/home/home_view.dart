@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -93,8 +94,11 @@ class ResepCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // var comment = await controller.getcommentlength(resepData['postId']);
+    // print(comment);
     return GestureDetector(
       onTap: (() {
+        controller.addview(resepData['postId'], resepData['views']);
         Get.toNamed(
           PageName.detail,
           arguments: {
@@ -158,30 +162,62 @@ class ResepCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    resepData["uid"] == FirebaseAuth.instance.currentUser!.uid
-                        ? IconButton(
-                            icon: const Icon(Icons.more_vert),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      child: InkWell(
+                    IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                child: Container(
+                                  height: Get.width * 0.2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
                                         onTap: () {
                                           controller
                                               .deleteResep(resepData["postId"]);
                                         },
                                         child: Container(
+                                          width: 290,
                                           padding: EdgeInsets.symmetric(
                                               vertical: 10, horizontal: 10),
                                           child: Text("Hapus Postingan"),
                                         ),
                                       ),
-                                    );
-                                  });
-                            },
-                          )
-                        : Container()
+                                      InkWell(
+                                        onTap: () {
+                                          Get.back();
+                                          Get.toNamed(PageName.laporpengguna,
+                                              arguments: ({
+                                                'postId': resepData["postId"],
+                                                'commentId': '',
+                                                'terlapor':
+                                                    resepData["username"],
+                                                'terlaporId': resepData["uid"],
+                                                'pelapor': controller
+                                                    .currentUserData['name'],
+                                                'pelanggaran':
+                                                    resepData["foto_resep"],
+                                                'type': 'postingan'
+                                              }));
+                                        },
+                                        child: Container(
+                                          width: 290,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 10),
+                                          child: Text("Lapor Postingan"),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                    )
                   ],
                 ),
               ),
@@ -280,9 +316,112 @@ class ResepCard extends StatelessWidget {
                                           ],
                                         ),
                                       ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(27),
+                                            color:
+                                                primaryColor.withOpacity(0.5)),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.remove_red_eye_sharp,
+                                              color: Colors.white,
+                                              size: 17,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              resepData['views'].toString(),
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   )
                                 ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  controller.likePost(
+                                      resepData['postId'],
+                                      controller.currentUserData['uid'],
+                                      resepData['likes']);
+                                },
+                                child: Container(
+                                  width: 70,
+                                  height: 37,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(27),
+                                      color: primaryColor.withOpacity(0.5)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.favorite,
+                                        color: (resepData['likes']).contains(
+                                                controller
+                                                    .currentUserData['uid'])
+                                            ? Colors.red
+                                            : Colors.white,
+                                        size: 18,
+                                      ),
+                                      Text(
+                                        resepData['likes'].length.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(PageName.comment, arguments: {
+                                    "postId": resepData['postId'],
+                                    "uid": resepData['uid']
+                                  });
+                                },
+                                child: Container(
+                                  height: 37,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(27),
+                                      color: primaryColor.withOpacity(0.5)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.message_outlined,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        resepData['jumlahkomentar'].toString(),
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),

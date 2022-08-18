@@ -1,26 +1,24 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mau_masak/model/resep.dart';
-import 'package:mau_masak/pages/detailresep/detail_controller.dart';
-import 'package:mau_masak/routes/page_names.dart';
-import 'package:mau_masak/services/firemessaging_controller.dart';
+import 'package:mau_masak/pages/admin/dataresep/detailresepadmin_controller.dart';
+
 import 'package:mau_masak/theme/styles.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class DetailView extends StatelessWidget {
-  const DetailView({Key? key}) : super(key: key);
+class DetailResepAdminView extends StatelessWidget {
+  const DetailResepAdminView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: GetBuilder<DetailController>(
-          init: DetailController(),
+      body: GetBuilder<DetailResepAdminController>(
+          init: DetailResepAdminController(),
           builder: (controller) {
             return FutureBuilder<DocumentSnapshot>(
                 future: controller.getDetailResep(),
@@ -37,7 +35,7 @@ class DetailView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                detailInfo(resep, controller, context),
+                                detailInfo(resep, controller),
                                 Text(
                                   "Deskripsi",
                                   style: TextStyle(
@@ -218,52 +216,20 @@ class DetailView extends StatelessWidget {
     );
   }
 
-  Widget detailInfo(
-      Resep resep, DetailController controller, BuildContext context) {
+  Widget detailInfo(Resep resep, DetailResepAdminController controller) {
     return Container(
       width: Get.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                resep.namaResep ?? "",
-                style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 20,
-                    color: textColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              resep.uid == FirebaseAuth.instance.currentUser!.uid
-                  ? IconButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.toNamed(PageName.editresep,
-                                        arguments: ({
-                                          'postId': resep.postId ?? ""
-                                        }));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
-                                    child: const Text("Edit Resep"),
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                      icon: Icon(Icons.more_vert))
-                  : Container()
-            ],
+          Text(
+            resep.namaResep ?? "",
+            style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 20,
+                color: textColor,
+                fontWeight: FontWeight.w600),
           ),
-
           SizedBox(height: 5),
           Row(
             children: [
@@ -295,44 +261,6 @@ class DetailView extends StatelessWidget {
                   fontSize: 12,
                   color: textColor,
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Icon(
-                Icons.remove_red_eye_sharp,
-                color: Colors.grey,
-                size: 17,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                resep.views.toString(),
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: textColor,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Icon(
-                Icons.book,
-                color: Colors.grey,
-                size: 17,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                resep.kategori.toString(),
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12,
-                  color: textColor,
-                ),
               )
             ],
           ),
@@ -354,132 +282,12 @@ class DetailView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 5),
-                  InkWell(
-                    onTap: () {
-                      Get.toNamed(PageName.userprofile, arguments: {
-                        "uid": resep.uid,
-                      });
-                    },
-                    child: Text(
-                      resep.username ?? "",
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                  Text(
+                    resep.username ?? "",
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   )
                 ],
               ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      controller.likePost(resep.postId ?? "",
-                          controller.currentUserData['uid'], resep.likes ?? []);
-                      if (controller.currentUserData['uid'] !=
-                          controller.ownerUserData['uid']) {
-                        FiremessagingController.activityPost(
-                            controller.currentUserData['profilePhoto'],
-                            controller.currentUserData['name'],
-                            controller.ownerUserData['uid'],
-                            'suka',
-                            controller.postId);
-                        FiremessagingController.sendNotification(
-                          controller.currentUserData['name'],
-                          "Menyukai Postingan Anda",
-                          controller.ownerUserData['tokenNotif'],
-                        );
-                      }
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 27,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(27),
-                          color: primaryColor.withOpacity(0.7)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.favorite,
-                            color: (resep.likes ?? [])
-                                    .contains(controller.currentUserData['uid'])
-                                ? Colors.red
-                                : Colors.white,
-                            size: 17,
-                          ),
-                          Text(
-                            resep.likes?.length.toString() ?? "0",
-                            style: TextStyle(fontSize: 13, color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.dislikePost(
-                          resep.postId ?? "",
-                          controller.currentUserData['uid'],
-                          resep.dislikes ?? []);
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 27,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(27),
-                          color: primaryColor.withOpacity(0.7)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.heart_broken,
-                            color: (resep.dislikes ?? [])
-                                    .contains(controller.currentUserData['uid'])
-                                ? Colors.red
-                                : Colors.white,
-                            size: 17,
-                          ),
-                          Text(
-                            resep.dislikes?.length.toString() ?? "0",
-                            style: TextStyle(fontSize: 13, color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(PageName.comment, arguments: {
-                        "postId": resep.postId,
-                        "uid": resep.uid
-                      });
-                    },
-                    child: Container(
-                      width: 90,
-                      height: 27,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(27),
-                          color: primaryColor.withOpacity(0.7)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Icon(
-                            Icons.message,
-                            color: Colors.white,
-                            size: 17,
-                          ),
-                          Text(
-                            "Komentar",
-                            style: TextStyle(fontSize: 13, color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
           SizedBox(height: 10),

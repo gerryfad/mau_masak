@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mau_masak/model/user.dart' as model;
 import 'package:flutter/material.dart';
@@ -75,12 +77,71 @@ class MyProfileView extends StatelessWidget {
 
                                 // username
                                 Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 5, top: 20),
                                   child: Text(
                                     "@${user.username}",
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 18),
                                   ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      user.bio ?? "",
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 12),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text('Edit Bio'),
+                                                  content: TextFormField(
+                                                    controller:
+                                                        controller.editbio,
+                                                    decoration: InputDecoration(
+                                                        hintText:
+                                                            "Tulis bio yang ingin diubah"),
+                                                  ),
+                                                  actions: [
+                                                    MaterialButton(
+                                                      color: primaryColor,
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Close",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                    MaterialButton(
+                                                      color: primaryColor,
+                                                      onPressed: () {
+                                                        controller.editbios();
+                                                      },
+                                                      child: Text("Edit",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 16,
+                                        ))
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
                                 ),
                                 Row(
                                   mainAxisAlignment:

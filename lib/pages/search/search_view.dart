@@ -116,6 +116,7 @@ class SearchView extends StatelessWidget {
                           .toString()
                           .toLowerCase()
                           .startsWith(controller.search)) {
+                        print(user?[index]['name']);
                         return ListTile(
                           onTap: () {
                             Get.toNamed(PageName.userprofile, arguments: {
@@ -144,6 +145,7 @@ class SearchView extends StatelessWidget {
                         .toString()
                         .toLowerCase()
                         .startsWith(controller.search.toLowerCase())) {
+                      print(resep?[index]['nama_resep']);
                       return ListTile(
                         onTap: () {
                           Get.toNamed(PageName.detail, arguments: {

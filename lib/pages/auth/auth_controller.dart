@@ -9,9 +9,11 @@ import 'package:mau_masak/routes/page_names.dart';
 
 class AuthController extends GetxController {
   var firebaseAuth = FirebaseAuth.instance;
-  var firestore = FirebaseFirestore.instance;
 
+  var route = PageName.dashboard;
+  var firestore = FirebaseFirestore.instance;
   static AuthController instance = Get.find();
+  var userData = {};
 
   Stream<User?> streamAuthStatus() {
     return firebaseAuth.authStateChanges();
@@ -25,7 +27,27 @@ class AuthController extends GetxController {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      if (firebaseAuth.currentUser!.emailVerified) {
+      userData = (await FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .get())
+          .data()!;
+      if (userData['role'] == 'admin') {
+        EasyLoading.showSuccess('Login Sebagai Admin !',
+            duration: const Duration(milliseconds: 500));
+
+        Get.offAllNamed(PageName.admin);
+      } else if (userData['isDisabled'] == true) {
+        EasyLoading.dismiss();
+        Get.defaultDialog(
+            title: "Terjadi Kesalahan",
+            middleText:
+                "Akun Anda Telah Di Banned Karena Melanggar Ketentuan Penggunaan",
+            onConfirm: () {
+              Get.back();
+            },
+            textConfirm: "Keluar");
+      } else if (firebaseAuth.currentUser!.emailVerified) {
         EasyLoading.showSuccess('Berhasil!',
             duration: const Duration(milliseconds: 500));
         FirebaseFirestore.instance

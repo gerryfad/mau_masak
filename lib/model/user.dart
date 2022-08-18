@@ -8,6 +8,7 @@ class User {
   List? followers;
   List? following;
   String? tokenNotif;
+  String? bio;
 
   User(
       {required this.uid,
@@ -16,7 +17,8 @@ class User {
       this.followers,
       this.following,
       this.profilePhoto,
-      this.tokenNotif});
+      this.tokenNotif,
+      this.bio});
 
   Map<String, dynamic> toJson() => {
         "name": username,
@@ -25,7 +27,8 @@ class User {
         "uid": uid,
         "followers": followers,
         "following": following,
-        "tokenNotif": tokenNotif
+        "tokenNotif": tokenNotif,
+        "bio": bio
       };
 
   static User fromJson(DocumentSnapshot snap) {
@@ -38,6 +41,7 @@ class User {
       followers: snapshot['followers'],
       following: snapshot['following'],
       tokenNotif: snapshot['tokenNotif'],
+      bio: snapshot['bio'],
     );
   }
 }
